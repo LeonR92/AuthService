@@ -1,4 +1,4 @@
-version: '3.8'
+version: "3.8"
 
 services:
   app:
@@ -9,4 +9,7 @@ services:
       - .:/app
     environment:
       - PYTHONUNBUFFERED=1
-    command: uv pip install -r requirements.txt && python app.py
+    ports:
+      - "8080:8080"
+    command: >
+      sh -c "pip install uv && uv venv .venv && uv pip install --system --requirements pyproject.toml && python app.py"
