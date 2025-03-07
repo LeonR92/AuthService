@@ -15,3 +15,9 @@ class UserService:
         with get_db() as db:
             user_repo = UserRepository(db)
             return user_repo.get_by_id(user_id)
+
+    def create_user():
+        pass
+
+    def user_auth():
+        pass
