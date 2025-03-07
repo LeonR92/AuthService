@@ -5,5 +5,4 @@ class TimestampMixin:
     
     created_at = Column(DateTime, nullable=False, server_default=func.now())
     updated_at = Column(DateTime, nullable=True, onupdate=func.now())
-    changed_at = Column(DateTime, nullable=True)
     deleted_at = Column(DateTime, nullable=True)
