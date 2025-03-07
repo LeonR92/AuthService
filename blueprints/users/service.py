@@ -1,5 +1,5 @@
 from core.database import get_db
-from blueprints.users.repository import UserRepository
+from blueprints.users.user_repository import UserRepository
 
 class UserService:
     """Service layer for User operations."""
@@ -19,5 +19,8 @@ class UserService:
     def create_user():
         pass
 
-    def user_auth():
+    def authentication():
         pass
+
+    def reset_password():
+        pass§
