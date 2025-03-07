@@ -2,11 +2,12 @@ from flask import Flask
 from flask_migrate import Migrate
 from dotenv import load_dotenv
 import os
-
+from blueprints.users.views import users
 
 
 # Initialize Flask app
 app = Flask(__name__)
+app.register_blueprint(users)
 
 load_dotenv()
 

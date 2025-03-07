@@ -1,4 +1,4 @@
-from BookStore.blueprints.users.models import User
+from blueprints.users.models import User
 
 
 class UserRepository:
