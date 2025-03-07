@@ -13,9 +13,12 @@ class CredentialsRepository:
         return self.db_session.query(User).filter(User.id == user_id).first()
     
  
-    def create_credentials(crendential_id:int):
-        pass
-
+    def create_credentials(self,**kwargs) -> int:
+        credentials = Credentials(**kwargs)
+        self.db_session.add(credentials)
+        self.db_session.flush()
+        return credentials.id
+        
         
     def delete(self, user_id: int):
         """Delete a user by ID."""

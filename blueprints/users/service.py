@@ -16,7 +16,12 @@ class UserService:
             user_repo = UserRepository(db)
             return user_repo.get_by_id(user_id)
 
-    def create_user():
+    def create_user(self):
+        with get_db() as db:
+            user_repo = UserRepository(db)
+        # form validator
+        # create credentials
+        # create user
         pass
 
     def authentication():

@@ -30,6 +30,5 @@ class UserRepository:
             # Update attributes one by one
             for key, value in kwargs.items():
                 setattr(user, key, value)
-            # No need to call db_session.add() - the object is already tracked
             return user
         return None
