@@ -6,5 +6,6 @@ readme = "README.md"
 requires-python = ">=3.9"
 dependencies = [
     "flask>=3.1.0",
+    "flask-migrate>=4.1.0",
     "sqlalchemy>=2.0.38",
 ]
