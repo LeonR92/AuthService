@@ -14,7 +14,7 @@ class UserRepository:
     
  
     def create_user(crendential_id:int):
-        return pass
+        pass
 
         
     def delete(self, user_id: int):
