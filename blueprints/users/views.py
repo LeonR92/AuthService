@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template, request, jsonify
-from blueprints.users.service import UserService
+from blueprints.users.user_service import UserService
 
 # Initialize Blueprint
 users = Blueprint(
