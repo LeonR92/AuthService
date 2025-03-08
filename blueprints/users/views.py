@@ -20,7 +20,7 @@ def create_user():
     data = request.json
 
     user_service = UserService()
-    user = user_service.register_user(email=data["email"], name=data["name"])
+    user = user_service.create_user(data)
     return jsonify({"id": user.id, "email": user.email}), 201
 
 @users.route("/users/<int:user_id>", methods=["GET"])

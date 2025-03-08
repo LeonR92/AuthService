@@ -16,8 +16,12 @@ class UserService:
             user_repo = UserRepository(db)
             return user_repo.get_by_id(user_id)
 
-    def create_user(self):
+    def create_user(self, data):
         with get_write_db() as db:
+            if not data:
+                raise ("Data cannot be empty")
+            if data not in ["first_name","last_name","email"]:
+                raise ("Test")
             user_repo = UserRepository(db)
         # form validator
         # create credentials
