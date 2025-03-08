@@ -1,6 +1,4 @@
 
-
-import secrets
 import bcrypt
 from blueprints.users.crendentials_service import CredentialsService
 from blueprints.users.mfa_service import MFAservice
