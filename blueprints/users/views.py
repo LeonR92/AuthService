@@ -43,10 +43,14 @@ def create_credentials():
             cred_service = CredentialsService(cred_repo)
             credentials = cred_service.create_credentials(email=email, password=password)
 
-        return jsonify({"id": credentials.id, "email": credentials.email}), 201
+        return jsonify({"email": credentials.email}), 201
 
     except ValueError as e:
         return jsonify({"error": str(e)}), 400  
+    
+@users.route("/get_all_credentials")
+def get_all_credentials():
+    pass
 
 
 @users.route("/users/<int:user_id>", methods=["GET"])
