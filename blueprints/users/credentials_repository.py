@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import Any, Dict, Optional
+from typing import Any, Dict, List, Optional
 from sqlalchemy.orm import Session
 from blueprints.users.models import Credentials, User
 
@@ -16,6 +16,10 @@ class CredentialsRepository:
         """
         self.write_db_session = write_db_session
         self.read_db_session = read_db_session
+    
+    def get_all_credentials(self) -> List[Credentials]:
+        """Fetch all credentials (Read-Only)."""
+        return self.read_db_session.query(Credentials).all()
 
     def get_credentials_by_id(self, user_id: int) -> Optional[User]:
         """Fetch a user by ID (Read-Only)."""

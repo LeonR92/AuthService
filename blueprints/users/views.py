@@ -45,12 +45,21 @@ def create_credentials():
 
         return jsonify({"email": credentials.email}), 201
 
-    except ValueError as e:
+    except Exception as e:
         return jsonify({"error": str(e)}), 400  
     
 @users.route("/get_all_credentials")
 def get_all_credentials():
-    pass
+    try:
+        with get_write_db() as write_db, get_read_db() as read_db:
+            cred_repo = CredentialsRepository(write_db, read_db)
+            cred_service = CredentialsService(cred_repo)
+            credentials = cred_service.get_all_credentials()
+
+        return jsonify([{"id": cred.id, "email": cred.email} for cred in credentials]), 200
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 400  
 
 
 @users.route("/users/<int:user_id>", methods=["GET"])

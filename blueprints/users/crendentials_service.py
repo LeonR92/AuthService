@@ -1,5 +1,7 @@
+from typing import List
 from blueprints.users.credentials_repository import CredentialsRepository
 import bcrypt
+from blueprints.users.models import Credentials
 class CredentialsService:
     """Service layer for User operations."""
 
@@ -24,9 +26,9 @@ class CredentialsService:
 
         return self.cred_repo.create_credentials(email=email, password=hashed_password)
 
-    def get_user(self, user_id: int):
-        """Fetch a user by ID."""
-        return self.cred_repo.get_by_id(user_id)
+    def get_all_credentials(self) -> List[Credentials]:
+        """Fetch all credentials."""
+        return self.cred_repo.get_all_credentials()
 
     def create_user(self, data: dict):
         """Creates a new user with basic validation."""
