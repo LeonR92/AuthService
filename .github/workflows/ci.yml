@@ -57,4 +57,4 @@ jobs:
         env:
           DATABASE_URL: postgresql://test_user:test_password@localhost/test_db
         run: |
-          uv pip run pytest --disable-warnings -v
+          python -m pytest --disable-warnings -v
