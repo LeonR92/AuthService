@@ -1,6 +1,5 @@
 import pytest
 from unittest.mock import MagicMock
-import pyotp
 from blueprints.users.mfa_service import MFAservice
 from blueprints.users.mfa_repository import MFARepository
 from blueprints.users.models import MFA
