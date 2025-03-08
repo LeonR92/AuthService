@@ -2,13 +2,15 @@
 import bcrypt
 from blueprints.users.crendentials_service import CredentialsService
 from blueprints.users.mfa_service import MFAservice
+from blueprints.users.user_service import UserService
 
 
 
 class AuthService():
-    def __init__(self,cred_service:CredentialsService, mfa_service:MFAservice) -> None:
+    def __init__(self,cred_service:CredentialsService, mfa_service:MFAservice, user_service:UserService) -> None:
         self.cred_service = cred_service
         self.mfa_service = mfa_service
+        self.user_service = user_service
 
     def verify_password(self,email:str,password:str) -> bool:
         cred = self.cred_service.get_credentials_via_email(email=email)
@@ -33,8 +35,9 @@ class AuthService():
             raise Exception(f"No user found with the email:{email}")
         mfa_id = self.mfa_service.create_mfa_entry()
         if not mfa_id:
-            raise Exception("Error creating MFA entry")
+            raise RuntimeError("Error creating MFA entry")
         user.mfa_id = mfa_id
+        self.user_service.update_user(user)
     
 
     def verify_mfa():
