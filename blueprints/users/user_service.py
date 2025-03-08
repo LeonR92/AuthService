@@ -9,7 +9,7 @@ class UserService:
     
     def get_user_by_id(self, user_id: int):
         """Fetch a user by ID and raise an error if not found."""
-        user = self.user_repo.get_by_id(user_id)
+        user = self.user_repo.get_user_by_id(user_id)
         if not user:
             raise ValueError(f"User with ID {user_id} not found")
         return user
