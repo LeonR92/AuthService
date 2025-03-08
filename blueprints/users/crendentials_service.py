@@ -1,5 +1,5 @@
 from blueprints.users.credentials_repository import CredentialsRepository
-
+import bcrypt
 class CredentialsService:
     """Service layer for User operations."""
 
@@ -7,9 +7,22 @@ class CredentialsService:
         """Initialize with a repository instance."""
         self.cred_repo = cred_repo
 
-    def register_user(self, email: str, name: str):
+    def validate_and_hash_pw(self,password:str, password_length:int = 8) -> str:
+        if not password or password.strip() == "":
+            raise ValueError("Password cannot be empty")
+        if len(password) <= password_length:
+            raise ValueError(f"Password cannot be shorther than {password_length}")
+        hashed_password = bcrypt.hashpw(password.encode("utf-8"), bcrypt.gensalt())
+        return hashed_password.decode("utf-8")
+                        
+
+    def create_credentials(self, email: str, password: str) -> None:
         """Registers a new user."""
-        return self.cred_repo.create_credentials(email=email, name=name)
+        if not email or not password:
+            raise ValueError("Email or Password cannot be empty")
+        hashed_password = self.validate_and_hash_pw(password)
+
+        return self.cred_repo.create_credentials(email=email, password=hashed_password)
 
     def get_user(self, user_id: int):
         """Fetch a user by ID."""

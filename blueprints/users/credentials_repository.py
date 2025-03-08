@@ -36,7 +36,7 @@ class CredentialsRepository:
         return user
     
     def soft_delete_credentials(self, user_id: int) -> Optional[User]:
-        """Delete a user by ID (Write Operation)."""
+        """Soft delete a user by ID (Write Operation)."""
         user = self.get_credentials_by_id(user_id)
         if user:
             user.deleted_at = datetime.now()
