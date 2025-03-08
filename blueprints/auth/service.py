@@ -1,7 +1,12 @@
 
 
+from blueprints.users.mfa_service import MFAservice
+from blueprints.users.user_service import UserService
+
+
 class AuthService():
-    
+    def __init__(self,user_service:UserService, mfa_service:MFAservice) -> None:
+        pass
     def check_password():
         pass
     
