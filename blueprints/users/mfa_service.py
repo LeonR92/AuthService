@@ -46,3 +46,8 @@ class MFAservice:
             raise ValueError(f"Failed to update MFA secret for user {user_id}")
         
         return new_totp_secret
+    
+    def delete_mfa(self,mfa_id=int) -> None:
+        self.mfa_repo.delete(mfa_id=mfa_id)
+
+

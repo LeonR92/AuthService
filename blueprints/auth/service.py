@@ -39,11 +39,19 @@ class AuthService():
         user.mfa_id = mfa_id
         self.user_service.update_user(user)
     
-    def deactivate_mfa(self,email:str):
+    def deactivate_mfa(self, email: str) -> None:
+        """Deactivates MFA for a user by removing their MFA record."""
         user = self.cred_service.get_credentials_via_email(email=email)
         if not user:
-            raise ValueError(f"no user found with the email {email}")
-        mfa_info = self.mfa_service.get_mfa_details_via_user_id()
+            raise ValueError(f"No user found with the email {email}")
+
+        mfa_info = self.mfa_service.get_mfa_details_via_user_id(user.id)
+        if not mfa_info:
+            raise ValueError(f"No MFA record found for user {email}")
+
+        self.mfa_service.delete_mfa(mfa_info)
+
+
 
     
 
