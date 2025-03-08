@@ -41,11 +41,12 @@ jobs:
           python -m pip install --upgrade pip
           pip install uv
           uv venv
-          uv pip install --system  
+          uv pip install --system -e .
+          uv pip install --system pytest
           uv pip list 
 
       - name: Run Tests with Pytest
         env:
           DATABASE_URL: postgresql://test_user:test_password@localhost/test_db
         run: |
-          uv pip run pytest --disable-warnings -v  
+          uv pip run pytest --disable-warnings -v
