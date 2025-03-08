@@ -48,7 +48,7 @@ def create_credentials():
     except Exception as e:
         return jsonify({"error": str(e)}), 400  
     
-@users.route("/get_all_credentials")
+@users.route("/get_all_credentials", methods=["GET"])
 def get_all_credentials():
     try:
         with get_write_db() as write_db, get_read_db() as read_db:
