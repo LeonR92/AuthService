@@ -39,14 +39,19 @@ class AuthService():
         user.mfa_id = mfa_id
         self.user_service.update_user(user)
     
+    def deactivate_mfa(self,email:str):
+        user = self.cred_service.get_credentials_via_email(email=email)
+        if not user:
+            raise ValueError(f"no user found with the email {email}")
+        mfa_info = self.mfa_service.get_mfa_details_via_user_id()
+
+    
 
     def verify_mfa():
         pass
 
 
 
-    def deactivate_mfa():
-        pass
 
     def resend_mfa_seed():
         pass

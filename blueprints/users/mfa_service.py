@@ -23,6 +23,12 @@ class MFAservice:
             raise Exception("User details requested not found")
         return user_details
     
+    def get_mfa_details_via_email(self,email:str) -> MFA:
+        mfa_details = self.mfa_repo.get_mfa_details_via_email(email=email)
+        if not mfa_details:
+            raise ValueError("MFA is not activated for this user")
+        return mfa_details
+
     def create_totp_secret(self) -> str:
         return pyotp.random_base32()
 

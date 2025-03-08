@@ -12,7 +12,7 @@ class MFARepository():
     def get_mfa_details_by_user_id(self, user_id:int) -> Optional[MFA]:
         return self.read_db_session.query(MFA).join(User,User.mfa_id == MFA.id).filter(User.id == user_id).first()
     
-    def get_user_details_by_mfa_id(self, email: str):
+    def get_user_details_by_mfa_id(self, email: str)-> Optional[User]:
         """Fetches user details by MFA ID using email."""
         return (
             self.read_db_session(User)
@@ -22,6 +22,15 @@ class MFARepository():
             .first()
         )
     
+    def get_mfa_details_via_email(self, email: str):
+        """Fetches MFA details for a user based on email."""
+        return (
+            self.read_db_session(User) 
+            .join(Credentials, User.credentials_id == Credentials.id)
+            .join(MFA, User.mfa_id == MFA.id)
+            .filter(Credentials.email == email)
+            .first()
+        )
     def get_mfa_details(self, mfa_id:int) -> Optional[MFA]:
         return self.read_db_session.query(MFA).filter(MFA.id == mfa_id).first()
     
