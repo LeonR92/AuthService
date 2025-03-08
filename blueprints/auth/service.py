@@ -1,6 +1,5 @@
 
 
-import secrets
 import bcrypt
 from blueprints.users.crendentials_service import CredentialsService
 from blueprints.users.mfa_service import MFAservice
@@ -12,38 +11,29 @@ class AuthService():
         self.cred_service = cred_service
         self.mfa_service = mfa_service
 
-    def check_password(self,email:str,password:str) -> bool:
+    def verify_password(self,email:str,password:str) -> bool:
         cred = self.cred_service.get_credentials_via_email(email=email)
         if not cred:
             return False
         return bcrypt.checkpw(password.encode("utf-8"), cred.password.encode("utf-8"))
     
-    def reset_password(self, email: str) -> str:
+    def reset_password(self, email: str, new_password:int) -> str:
         """Resets the password and returns the new one."""
         cred = self.cred_service.get_credentials_via_email(email)
         if not cred:
             raise Exception(f"Information not found for the email {email}")
 
-        new_password = self.generate_temp_password()
-        hashed_password = bcrypt.hashpw(new_password.encode(), bcrypt.gensalt()).decode()
-
+        hashed_password = self.cred_service.validate_and_hash_pw(new_password)
         self.cred_service.update(cred.id, password=hashed_password)
 
-        return new_password  # Send this to the user securely
+        return new_password
 
-    @staticmethod
-    def generate_temp_password(length: int = 12) -> str:
-        """Generates a random temporary password."""
-        return secrets.token_urlsafe(length)
-
+    def activate_mfa(self, email:str):
+        return None
     def verify_mfa():
         pass
 
-    def change_email():
-        pass
 
-    def activate_mfa():
-        pass
 
     def deactivate_mfa():
         pass

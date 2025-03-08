@@ -30,6 +30,8 @@ class CredentialsService:
         if not cred:
             raise Exception ("credentials not found")
         return cred.id
+    
+    
 
     def create_credentials(self, email: str, password: str) -> None:
         """Registers a new user."""

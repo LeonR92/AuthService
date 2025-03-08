@@ -27,6 +27,7 @@ class CredentialsRepository:
     
     def get_credentials_by_email(self,email:str) -> Optional[Credentials]:
         return self.read_db_session.query(Credentials).filter(Credentials.email == email).first()
+    
 
     def create_credentials(self, email:str, password:str) -> int:
         """Create new credentials (Write Operation)."""
