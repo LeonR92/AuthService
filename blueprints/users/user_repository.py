@@ -1,3 +1,4 @@
+from typing import Optional
 from blueprints.users.models import User
 from sqlalchemy.orm import Session
 
@@ -29,7 +30,7 @@ class UserRepository:
             self.write_db_session.commit()
         return True
 
-    def update(self, user_id: int, **kwargs) -> User | None:
+    def update(self, user_id: int, **kwargs) -> Optional[User]:
         """Updates user attributes and returns the updated user."""
         user = self.get_user_by_id(user_id)
         if not user:
