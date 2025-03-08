@@ -1,5 +1,4 @@
 from flask import Flask
-from flask_migrate import Migrate
 from dotenv import load_dotenv
 import os
 from blueprints.users.views import users
