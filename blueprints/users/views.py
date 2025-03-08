@@ -10,7 +10,8 @@ users = Blueprint(
     "users",
     __name__,
     template_folder="templates",  
-    static_folder="static"        
+    static_folder="static" ,
+    url_prefix="/users"       
 )
 
 
@@ -43,7 +44,7 @@ def create_credentials():
             cred_service = CredentialsService(cred_repo)
             credentials = cred_service.create_credentials(email=email, password=password)
 
-        return jsonify({"email": credentials.email}), 201
+        return jsonify({"id": credentials.id, "email": credentials.email}), 201 
 
     except Exception as e:
         return jsonify({"error": str(e)}), 400  
