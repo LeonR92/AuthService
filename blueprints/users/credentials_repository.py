@@ -1,3 +1,4 @@
+from datetime import datetime
 from typing import Any, Dict, Optional
 from sqlalchemy.orm import Session
 from blueprints.users.models import Credentials, User
@@ -32,6 +33,13 @@ class CredentialsRepository:
         user = self.get_credentials_by_id(user_id)
         if user:
             self.write_db_session.delete(user)
+        return user
+    
+    def soft_delete_credentials(self, user_id: int) -> Optional[User]:
+        """Delete a user by ID (Write Operation)."""
+        user = self.get_credentials_by_id(user_id)
+        if user:
+            user.deleted_at = datetime.now()
         return user
 
     def update_credentials(self, user_id: int, **kwargs) -> Optional[User]:
