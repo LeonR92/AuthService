@@ -1,5 +1,6 @@
 
 
+import secrets
 import bcrypt
 from blueprints.users.crendentials_service import CredentialsService
 from blueprints.users.mfa_service import MFAservice
@@ -29,7 +30,15 @@ class AuthService():
         return new_password
 
     def activate_mfa(self, email:str):
-        return None
+        user = self.cred_service.get_credentials_via_email(email=email)
+        if not user:
+            raise Exception(f"No user found with the email:{email}")
+        mfa_id = self.mfa_service.create_mfa_entry()
+        if not mfa_id:
+            raise Exception("Error creating MFA entry")
+        user.mfa_id = mfa_id
+    
+
     def verify_mfa():
         pass
 
