@@ -3,6 +3,7 @@ from flask_migrate import Migrate
 from dotenv import load_dotenv
 import os
 from blueprints.users.views import users
+from core.init_db import init_db
 
 
 # Initialize Flask app
@@ -21,5 +22,6 @@ def get_users():
 
 # Run app
 if __name__ == "__main__":
+    init_db()
     app.run(host="0.0.0.0", port=8080, debug=True)  
 

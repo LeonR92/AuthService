@@ -32,7 +32,6 @@ def create_credentials():
     """Create a new user with email and hashed password."""
     data = request.json
 
-    # Validate input (prevent KeyError)
     email = data.get("email")
     password = data.get("password")
 
@@ -49,8 +48,6 @@ def create_credentials():
     except ValueError as e:
         return jsonify({"error": str(e)}), 400  
 
-    except Exception as e:
-        return jsonify({"error": "Internal Server Error"}), 500  
 
 @users.route("/users/<int:user_id>", methods=["GET"])
 def get_user(user_id):
