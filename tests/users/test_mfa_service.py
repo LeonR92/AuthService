@@ -63,11 +63,11 @@ def test_create_mfa_entry_missing_user(mfa_service):
 
 def test_change_totp_secret_valid(mfa_service, mock_mfa_repo, sample_mfa):
     """Test successfully changing the TOTP secret."""
-    new_secret = "new_generated_secret"
+  
     mock_mfa_repo.update_mfa_secret.return_value = sample_mfa
 
     result = mfa_service.change_totp_secret(user_id=1)
 
     assert isinstance(result, str)
-    assert result != sample_mfa.totp_secret  # Ensures a new secret is generated
+    assert result != sample_mfa.totp_secret  
     mock_mfa_repo.update_mfa_secret
