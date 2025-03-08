@@ -16,7 +16,7 @@ class CredentialsRepository:
         self.write_db_session = write_db_session
         self.read_db_session = read_db_session
 
-    def get_by_id(self, user_id: int) -> Optional[User]:
+    def get_credentials_by_id(self, user_id: int) -> Optional[User]:
         """Fetch a user by ID (Read-Only)."""
         return self.read_db_session.query(User).filter(User.id == user_id).first()
 
@@ -27,16 +27,16 @@ class CredentialsRepository:
         self.write_db_session.flush()
         return credentials.id
 
-    def delete(self, user_id: int) -> Optional[User]:
+    def delete_credentials(self, user_id: int) -> Optional[User]:
         """Delete a user by ID (Write Operation)."""
-        user = self.get_by_id(user_id)
+        user = self.get_credentials_by_id(user_id)
         if user:
             self.write_db_session.delete(user)
         return user
 
-    def update(self, user_id: int, **kwargs) -> Optional[User]:
+    def update_credentials(self, user_id: int, **kwargs) -> Optional[User]:
         """Update user fields (Write Operation)."""
-        user = self.get_by_id(user_id)
+        user = self.get_credentials_by_id(user_id)
         if user:
             for key, value in kwargs.items():
                 setattr(user, key, value)
