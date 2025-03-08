@@ -1,5 +1,4 @@
-from typing import Any, Dict, Optional
-from blueprints.users.models import Credentials, User
+from blueprints.users.models import User
 
 
 class UserRepository:

@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, DateTime, ForeignKey, func, UniqueConstraint
+from sqlalchemy import Column, Integer, String, DateTime, ForeignKey, func
 from sqlalchemy.orm import relationship
 from core.database import Base
 from core.models import TimestampMixin
@@ -39,10 +39,8 @@ class MFA(Base, TimestampMixin):
     __tablename__ = "mfa"
 
     id = Column(Integer, primary_key=True, autoincrement=True)
-    user_id = Column(Integer, ForeignKey("users.id", ondelete="CASCADE"), nullable=False, unique=True)
     otp_secret = Column(String(100), nullable=True) 
 
     # Relationship
     user = relationship("User", back_populates="mfa", uselist=False)
 
-    __table_args__ = (UniqueConstraint("user_id", name="uq_mfa_user"),)

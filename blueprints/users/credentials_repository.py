@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import Any, Dict, List, Optional
+from typing import List, Optional
 from sqlalchemy.orm import Session
 from blueprints.users.models import Credentials, User
 
