@@ -18,8 +18,8 @@ class User(Base, TimestampMixin):
     mfa_id = Column(Integer, ForeignKey("mfa.id", ondelete="SET NULL"), nullable=True, unique=True)
 
     # Relationships
-    credentials = relationship("Credentials", back_populates="user", uselist=False, cascade="all, delete-orphan")
-    mfa = relationship("MFA", back_populates="user", uselist=False, cascade="all, delete-orphan")
+    credentials = relationship("Credentials", back_populates="user", uselist=False, cascade="all, delete")
+    mfa = relationship("MFA", back_populates="user", uselist=False, cascade="all, delete")
 
 
 
