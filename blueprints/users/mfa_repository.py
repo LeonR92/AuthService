@@ -27,12 +27,14 @@ class MFARepository():
             self.write_db_session.delete(mfa)
             self.write_db_session.commit()
     
-    def update(self,mfa_id:int,**kwargs)->None|int:
-        mfa = self.get_mfa_details(mfa_id)
+    def update_mfa_secret(self, user_id: int, otp_secret: str) -> MFA | None:
+        """Updates the TOTP secret for the user's MFA entry."""
+        mfa = self.get_mfa_details_by_user_id(user_id)
         if not mfa:
             return None
-        for key,value in kwargs.items():
-            setattr(mfa,key,value)
+
+        mfa.otp_secret = otp_secret
         self.write_db_session.commit()
         self.write_db_session.refresh(mfa)
+        
         return mfa

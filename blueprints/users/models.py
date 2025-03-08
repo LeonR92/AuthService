@@ -39,7 +39,7 @@ class MFA(Base, TimestampMixin):
     __tablename__ = "mfa"
 
     id = Column(Integer, primary_key=True, autoincrement=True)
-    otp_secret = Column(String(100), nullable=True) 
+    totp_secret = Column(String(100), nullable=True) 
 
     # Relationship
     user = relationship("User", back_populates="mfa", uselist=False)
