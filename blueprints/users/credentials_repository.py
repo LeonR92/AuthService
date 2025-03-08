@@ -19,11 +19,11 @@ class CredentialsRepository:
 
     def get_credentials_by_id(self, user_id: int) -> Optional[User]:
         """Fetch a user by ID (Read-Only)."""
-        return self.read_db_session.query(User).filter(User.id == user_id).first()
+        return self.read_db_session.query(Credentials).filter(Credentials.id == user_id).first()
 
-    def create_credentials(self, **kwargs) -> int:
+    def create_credentials(self, email:str, password:str) -> int:
         """Create new credentials (Write Operation)."""
-        credentials = Credentials(**kwargs)
+        credentials = Credentials(email = email, password = password)
         self.write_db_session.add(credentials)
         self.write_db_session.flush()
         return credentials.id

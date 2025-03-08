@@ -29,14 +29,29 @@ def create_user():
 
 @users.route("/create_credentials", methods=["POST"])
 def create_credentials():
-    """Create a new user."""
+    """Create a new user with email and hashed password."""
     data = request.json
 
-    with get_write_db() as write_db, get_read_db() as read_db:
-        cred_repo = CredentialsRepository(write_db,read_db)
-        cred_service = CredentialsService(cred_repo = cred_repo)
-        credentials = cred_service.create_credentials(data)
-    return jsonify({"id": credentials.id, "email": credentials.email}), 201
+    # Validate input (prevent KeyError)
+    email = data.get("email")
+    password = data.get("password")
+
+    if not email or not password:
+        return jsonify({"error": "Email and password are required"}), 400
+
+    try:
+        with get_write_db() as write_db, get_read_db() as read_db:
+            cred_repo = CredentialsRepository(write_db, read_db)
+            cred_service = CredentialsService(cred_repo)
+            credentials = cred_service.create_credentials(email=email, password=password)
+
+        return jsonify({"id": credentials.id, "email": credentials.email}), 201
+
+    except ValueError as e:
+        return jsonify({"error": str(e)}), 400  
+
+    except Exception as e:
+        return jsonify({"error": "Internal Server Error"}), 500  
 
 @users.route("/users/<int:user_id>", methods=["GET"])
 def get_user(user_id):
