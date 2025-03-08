@@ -11,5 +11,57 @@ services:
       - PYTHONUNBUFFERED=1
     ports:
       - "8080:8080"
+    depends_on:
+      - postgres-primary
+      - postgres-replica
     command: >
       sh -c "pip install uv && uv venv .venv && uv pip install --system --requirements pyproject.toml && python app.py"
+
+  postgres-primary:
+    image: postgres:15
+    container_name: postgres-primary
+    restart: always
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: mydb
+      POSTGRES_REPLICATION_USER: repl_user
+      POSTGRES_REPLICATION_PASSWORD: repl_password
+    ports:
+      - "5432:5432"
+    volumes:
+      - pg_primary_data:/var/lib/postgresql/data
+    command: >
+      postgres -c wal_level=replica -c max_wal_senders=10 -c hot_standby=on
+
+  postgres-replica:
+    image: postgres:15
+    container_name: postgres-replica
+    restart: always
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: mydb
+      POSTGRES_REPLICATION_USER: repl_user
+      POSTGRES_REPLICATION_PASSWORD: repl_password
+    ports:
+      - "5433:5432"
+    depends_on:
+      - postgres-primary
+    volumes:
+      - pg_replica_data:/var/lib/postgresql/data
+    command: >
+      bash -c "
+        rm -rf /var/lib/postgresql/data/* && 
+        PGPASSWORD=repl_password pg_basebackup -h postgres-primary -U repl_user -D /var/lib/postgresql/data -Fp -Xs -P -R && 
+        echo 'standby_mode = on' >> /var/lib/postgresql/data/recovery.conf &&
+        echo 'primary_conninfo = \"host=postgres-primary port=5432 user=repl_user password=repl_password\"' >> /var/lib/postgresql/data/recovery.conf &&
+        echo 'trigger_file = \"/tmp/postgresql.trigger\"' >> /var/lib/postgresql/data/recovery.conf &&
+        chown -R postgres:postgres /var/lib/postgresql/data &&
+        chmod 700 /var/lib/postgresql/data &&
+        exec postgres
+      "
+
+volumes:
+  pg_primary_data:
+  pg_replica_data:
