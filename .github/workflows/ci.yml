@@ -1,4 +1,4 @@
-name: Run Tests
+name: Run Tests and Lint with Ruff
 
 on:
   push:
@@ -41,17 +41,14 @@ jobs:
           python -m pip install --upgrade pip
           pip install uv
           uv venv
-          
-
           uv pip install --system "bcrypt>=4.3.0" "flask>=3.1.0" "flask-migrate>=4.1.0" "psycopg2>=2.9.10" "pyotp>=2.9.0" "python-dotenv>=1.0.1" "sqlalchemy>=2.0.38"
-          
-       
-          uv pip install --system pytest
-          
-
+          uv pip install --system pytest ruff
           echo "PYTHONPATH=$PYTHONPATH:$(pwd)" >> $GITHUB_ENV
-          
           uv pip list
+
+      - name: Run Ruff Linting
+        run: |
+          ruff check .
 
       - name: Run Tests with Pytest
         env:
