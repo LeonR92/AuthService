@@ -1,3 +1,4 @@
+from typing import Optional
 from sqlalchemy.orm import Session
 
 from blueprints.users.models import MFA, User
@@ -8,14 +9,14 @@ class MFARepository():
         self.read_db_session = read_db_session
 
     
-    def get_mfa_details_by_user_id(self, user_id:int) -> MFA|None:
+    def get_mfa_details_by_user_id(self, user_id:int) -> Optional[MFA]:
         return self.read_db_session.query(MFA).join(User,User.mfa_id == MFA.id).filter(User.id == user_id).first()
     
-    def get_mfa_details(self, mfa_id:int) -> MFA|None:
+    def get_mfa_details(self, mfa_id:int) -> Optional[MFA]:
         return self.read_db_session.query(MFA).filter(MFA.id == mfa_id).first()
     
-    def create(self,otp_secret:str) -> int:
-        mfa = MFA(otp_secret = otp_secret)
+    def create(self,totp_secret:str) -> int:
+        mfa = MFA(totp_secret = totp_secret)
         self.write_db_session.add(mfa)
         self.write_db_session.commit()
         self.write_db_session.flush()
@@ -27,13 +28,13 @@ class MFARepository():
             self.write_db_session.delete(mfa)
             self.write_db_session.commit()
     
-    def update_mfa_secret(self, user_id: int, otp_secret: str) -> MFA | None:
+    def update_mfa_secret(self, user_id: int, totp_secret: str) -> Optional[MFA]:
         """Updates the TOTP secret for the user's MFA entry."""
         mfa = self.get_mfa_details_by_user_id(user_id)
         if not mfa:
             return None
 
-        mfa.otp_secret = otp_secret
+        mfa.totp_secret = totp_secret
         self.write_db_session.commit()
         self.write_db_session.refresh(mfa)
         
