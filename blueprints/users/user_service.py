@@ -1,36 +1,32 @@
-from core.database import get_read_db,get_write_db
+from datetime import datetime
+from typing import Optional
 from blueprints.users.user_repository import UserRepository
+from core.utils import is_valid_string_value
 
 class UserService:
-    """Service layer for User operations."""
+    def __init__(self,user_repo:UserRepository) -> None:
+        self.user_repo = user_repo
+    
+    def get_user_by_id(self, user_id: int):
+        """Fetch a user by ID and raise an error if not found."""
+        user = self.user_repo.get_by_id(user_id)
+        if not user:
+            raise ValueError(f"User with ID {user_id} not found")
+        return user
+    
+    def create_user(self, first_name:str, last_name:str, country:Optional[str], dob:Optional[datetime]) -> int:
+        """Creates a new user after validating mandatory fields."""
+        if not is_valid_string_value(first_name) or not is_valid_string_value(last_name):
+            raise ValueError("First and last name cannot be empty")
+        return self.user_repo.create_user(first_name,last_name,country,dob)
+    
+    def update_user(self,user_id:int,**kwargs):
+        return self.user_repo.update(user_id,**kwargs)
+    
+    def delete_user(self,user_id:int):
+        return self.user_repo.delete(user_id)
 
-    def register_user(self, email: str, name: str):
-        """Registers a new user."""
-        with get_write_db() as db:  
-            user_repo = UserRepository(db)
-            return user_repo.create(email=email, name=name)
 
-    def get_user(self, user_id: int):
-        """Fetch a user by ID."""
-        with get_read_db() as db:
-            user_repo = UserRepository(db)
-            return user_repo.get_by_id(user_id)
+        
 
-    def create_user(self, data):
-        with get_write_db() as db:
-            if not data:
-                raise ("Data cannot be empty")
-            if data not in ["first_name","last_name","email"]:
-                raise ("Test")
-            user_repo = UserRepository(db)
-        # form validator
-        # create credentials
-        # create user
-        pass
 
-    def authentication():
-        # auth service
-        pass
-
-    def reset_password():
-        pass

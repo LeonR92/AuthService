@@ -10,7 +10,7 @@ class User(Base, TimestampMixin):
     id = Column(Integer, primary_key=True, autoincrement=True)
     first_name = Column(String(250), nullable=False, default="Unknown")
     last_name = Column(String(250), nullable=False, default="Unknown")
-    dob = Column(DateTime, nullable=True, default=func.current_timestamp())
+    dob = Column(DateTime, nullable=True)
     country = Column(String(150), nullable=True)
 
     # Foreign Keys

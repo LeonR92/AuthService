@@ -9,7 +9,7 @@ class UserRepository:
         self.read_db_session = read_db_session
         self.write_db_session = write_db_session
 
-    def get_by_id(self, user_id: int):
+    def get_user_by_id(self, user_id: int) -> User:
         """Fetch a user by ID."""
         return self.read_db_session.query(User).filter(User.id == user_id).first()
  
@@ -23,14 +23,15 @@ class UserRepository:
         
     def delete(self, user_id: int):
         """Delete a user by ID. No soft deletion due to DSGVO"""
-        user = self.get_by_id(user_id)
+        user = self.get_user_by_id(user_id)
         if user:
             self.write_db_session.delete(user)
-        return user
+            self.write_db_session.commit()
+        return True
 
     def update(self, user_id: int, **kwargs) -> User | None:
         """Updates user attributes and returns the updated user."""
-        user = self.get_by_id(user_id)
+        user = self.get_user_by_id(user_id)
         if not user:
             return None  
 
