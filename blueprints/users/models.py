@@ -30,6 +30,3 @@ class Credentials(Base, TimestampMixin):
     email = Column(String(300), nullable=False, unique=True)
     password = Column(String(150), nullable=False)
     last_login = Column(DateTime, nullable=True)
-
-class SSO(Base, TimestampMixin):
-    pass

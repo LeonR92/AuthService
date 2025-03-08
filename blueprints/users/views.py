@@ -38,7 +38,6 @@ def create_credentials():
 
     if not email or not password:
         return jsonify({"error": "Email and password are required"}), 400
-
     try:
         with get_write_db() as write_db, get_read_db() as read_db:
             cred_repo = CredentialsRepository(write_db, read_db)
