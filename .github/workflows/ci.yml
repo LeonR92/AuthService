@@ -8,7 +8,6 @@ on:
     branches:
       - '**'
 
-
 jobs:
   test:
     runs-on: ubuntu-latest
@@ -37,14 +36,16 @@ jobs:
         with:
           python-version: "3.10"
 
-      - name: Install Dependencies
+      - name: Install Dependencies with uv
         run: |
           python -m pip install --upgrade pip
-          pip install poetry
-          poetry install
+          pip install uv
+          uv venv
+          uv pip install --python=/usr/bin/python3
+          uv pip list 
 
       - name: Run Tests with Pytest
         env:
           DATABASE_URL: postgresql://test_user:test_password@localhost/test_db
         run: |
-          pytest --disable-warnings -v
+          uv pip run pytest --disable-warnings -v  #
