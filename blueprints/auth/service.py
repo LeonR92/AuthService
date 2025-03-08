@@ -1,14 +1,18 @@
 
 
+from blueprints.users.crendentials_service import CredentialsService
 from blueprints.users.mfa_service import MFAservice
 from blueprints.users.user_service import UserService
 
 
 class AuthService():
-    def __init__(self,user_service:UserService, mfa_service:MFAservice) -> None:
-        pass
-    def check_password():
-        pass
+    def __init__(self,cred_service:CredentialsService, mfa_service:MFAservice) -> None:
+        self.cred_service = cred_service
+        self.mfa_service = mfa_service
+
+    def check_password(self,email:str,password:str) -> bool:
+        user = self.cred_service.get_credentials_via_email(email=email)
+        return user
     
     def verify_mfa():
         pass

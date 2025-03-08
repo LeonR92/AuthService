@@ -14,6 +14,7 @@ class UserService:
             raise ValueError(f"User with ID {user_id} not found")
         return user
     
+    
     def create_user(self, first_name:str, last_name:str, country:Optional[str], dob:Optional[datetime]) -> int:
         """Creates a new user after validating mandatory fields."""
         if not is_valid_string_value(first_name) or not is_valid_string_value(last_name):

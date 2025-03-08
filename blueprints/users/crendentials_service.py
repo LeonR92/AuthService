@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Optional
 from blueprints.users.credentials_repository import CredentialsRepository
 import bcrypt
 from blueprints.users.models import Credentials
@@ -16,7 +16,12 @@ class CredentialsService:
             raise ValueError(f"Password cannot be shorther than {password_length}")
         hashed_password = bcrypt.hashpw(password.encode("utf-8"), bcrypt.gensalt())
         return hashed_password.decode("utf-8")
-                        
+
+    def get_credentials_via_email(self,email:str) -> Optional[Credentials]:
+        credentials =  self.cred_repo.get_credentials_by_email(email=email)
+        if not credentials:
+            raise Exception ("credentials not found")
+        return credentials
 
     def create_credentials(self, email: str, password: str) -> None:
         """Registers a new user."""

@@ -43,6 +43,16 @@ def test_get_credentials_by_id(credentials_repo, mock_db_sessions, sample_creden
     assert result == sample_credentials
     read_session.query.assert_called_once()
 
+def test_get_credentials_by_email(credentials_repo, mock_db_sessions, sample_credentials):
+    """Test fetching credentials by ID."""
+    _, read_session = mock_db_sessions
+    read_session.query.return_value.filter.return_value.first.return_value = sample_credentials
+    
+    result = credentials_repo.get_credentials_by_email(1)
+    
+    assert result == sample_credentials
+    read_session.query.assert_called_once()
+
 def test_create_credentials(credentials_repo, mock_db_sessions):
     """Test creating credentials."""
     write_session, _ = mock_db_sessions
