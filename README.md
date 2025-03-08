@@ -1,6 +1,1 @@
-# BookStore
-
-![Tests](https://github.com/LeonR92/BookStore/actions/workflows/test.yml/badge.svg)
-
-A modern bookstore application with user authentication and management.
-
+[![Run Tests](https://github.com/LeonR92/BookStore/actions/workflows/ci.yml/badge.svg)](https://github.com/LeonR92/BookStore/actions/workflows/ci.yml)
