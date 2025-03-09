@@ -1,4 +1,4 @@
-name: Run Tests and Lint with Ruff
+name: CI
 
 on:
   push:
