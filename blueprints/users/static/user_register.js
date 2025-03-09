@@ -86,3 +86,52 @@ document.addEventListener('DOMContentLoaded', async function() {
       }
     });
   });
+
+
+
+  // Toggle
+
+document.addEventListener('DOMContentLoaded', function() {
+  // Get elements
+  const toggleButton = document.getElementById('mfa_toggle');
+  const toggleSlider = toggleButton.querySelector('span');
+  const statusText = document.getElementById('is_mfa');
+  const hiddenInput = document.getElementById('mfa_enabled');
+  
+  // Initial state
+  let isEnabled = false;
+  statusText.textContent = "MFA not activated";
+  
+  // Toggle function
+  toggleButton.addEventListener('click', function() {
+    // Toggle state
+    isEnabled = !isEnabled;
+    
+    // Update hidden input value - this is what the backend will receive
+    hiddenInput.value = isEnabled.toString();
+    
+    // Update aria attribute
+    toggleButton.setAttribute('aria-checked', isEnabled);
+    
+    // Update button background
+    if (isEnabled) {
+      toggleButton.classList.remove('bg-gray-200');
+      toggleButton.classList.add('bg-indigo-600');
+    } else {
+      toggleButton.classList.remove('bg-indigo-600');
+      toggleButton.classList.add('bg-gray-200');
+    }
+    
+    // Update slider position
+    if (isEnabled) {
+      toggleSlider.classList.remove('translate-x-0');
+      toggleSlider.classList.add('translate-x-5');
+    } else {
+      toggleSlider.classList.remove('translate-x-5');
+      toggleSlider.classList.add('translate-x-0');
+    }
+    
+    // Update status text
+    statusText.textContent = isEnabled ? "MFA activated" : "MFA not activated";
+  });
+});
