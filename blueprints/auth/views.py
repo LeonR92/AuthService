@@ -8,7 +8,8 @@ auth = Blueprint(
     url_prefix="/auth"       
 )
 
-@auth.route("/create_user", method = ["POST"])
+@auth.route("/create_user", methods=["POST"])
 def create_user():
     data = request.form
+    print(data)
     return data
