@@ -5,7 +5,6 @@ from blueprints.users.user_service import UserService
 from core.database import get_read_db,get_write_db
 
 
-# Initialize Blueprint
 users = Blueprint(
     "users",
     __name__,
