@@ -19,6 +19,10 @@ users = Blueprint(
 def user_profile():
     return render_template("users_login.html")
 
+@users.route("/register")
+def register_user():
+    return render_template("users_register.html")
+
 @users.route("/users", methods=["POST"])
 def create_user():
     """Create a new user."""
