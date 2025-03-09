@@ -28,7 +28,7 @@ def create_user():
     """Create a new user."""
     data = request.form.to_dict()
     with get_write_db() as write_db, get_read_db() as read_db:
-        user_repo = UserRepository(write_db,read_db)
+        user_repo = UserRepository(write_db_session=write_db,read_db_session=read_db)
         user_service = UserService(user_repo)
         user = user_service.create_user(**data)
         print(user)

@@ -23,7 +23,13 @@ class UserService:
             raise ValueError("Email is already registered")
         if mfa_enabled == "true":
             pass
-        return self.user_repo.create_user(first_name,last_name,country,dob)
+        dob = None if not dob or dob.strip() == "" else datetime.strptime(dob, "%Y-%m-%d")
+        return self.user_repo.create_user(
+            first_name=first_name,
+            last_name=last_name,
+            country=country,
+            dob=dob
+        )
     
     def update_user(self,user_id:int,**kwargs):
         return self.user_repo.update(user_id,**kwargs)
