@@ -62,3 +62,27 @@ document.addEventListener('DOMContentLoaded', async function() {
       countrySelect.appendChild(fragment);
     }
   });
+
+
+
+  // DOB controller
+  document.addEventListener('DOMContentLoaded', function() {
+    // Get date input element
+    const dateInput = document.getElementById('dob');
+    
+    // Set max attribute to today's date
+    const today = new Date().toISOString().split('T')[0];
+    dateInput.setAttribute('max', today);
+    
+    // Add validation when date changes
+    dateInput.addEventListener('change', function() {
+      const selectedDate = new Date(this.value);
+      const currentDate = new Date();
+      
+      // Check if date is in the future
+      if(selectedDate > currentDate) {
+        alert('Please select a date in the past for your birthday.');
+        this.value = ''; 
+      }
+    });
+  });
