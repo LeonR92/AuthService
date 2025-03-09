@@ -15,10 +15,12 @@ class UserService:
         return user
     
     
-    def create_user(self, first_name:str, last_name:str, country:Optional[str], dob:Optional[datetime]) -> int:
+    def create_user(self, first_name:str, last_name:str, email:str, country:Optional[str], dob:Optional[datetime]) -> int:
         """Creates a new user after validating mandatory fields."""
-        if not is_valid_string_value(first_name) or not is_valid_string_value(last_name):
+        if not is_valid_string_value(first_name) or not is_valid_string_value(last_name) or not is_valid_string_value(email):
             raise ValueError("First and last name cannot be empty")
+        if self.user_repo.get_user_by_email(email):
+            raise ValueError("Email is already registered")
         return self.user_repo.create_user(first_name,last_name,country,dob)
     
     def update_user(self,user_id:int,**kwargs):

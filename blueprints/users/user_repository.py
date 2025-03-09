@@ -1,5 +1,5 @@
 from typing import Optional
-from blueprints.users.models import User
+from blueprints.users.models import Credentials, User
 from sqlalchemy.orm import Session
 
 
@@ -13,6 +13,12 @@ class UserRepository:
     def get_user_by_id(self, user_id: int) -> User:
         """Fetch a user by ID."""
         return self.read_db_session.query(User).filter(User.id == user_id).first()
+    
+    def get_user_by_email(self, email: str) -> Optional[User]:
+        """Fetch a user by email."""
+        return (self.read_db_session.query(User)
+                .join(Credentials,User.credentials_id == Credentials.id)
+                .filter(Credentials.email == email).first())
     
     def create_user(self,**kwargs) -> int:
         new_user = User(**kwargs)

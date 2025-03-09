@@ -1,6 +1,7 @@
-from flask import Blueprint, render_template, request, jsonify
+from flask import Blueprint, redirect, render_template, request, jsonify, url_for
 from blueprints.users.credentials_repository import CredentialsRepository
 from blueprints.users.crendentials_service import CredentialsService
+from blueprints.users.user_repository import UserRepository
 from blueprints.users.user_service import UserService
 from core.database import get_read_db,get_write_db
 
@@ -15,7 +16,7 @@ users = Blueprint(
 
 
 @users.route("/login")
-def user_profile():
+def login():
     return render_template("users_login.html")
 
 @users.route("/register")
@@ -25,10 +26,13 @@ def register_user():
 @users.route("/users", methods=["POST"])
 def create_user():
     """Create a new user."""
-    data = request.json
-    user_service = UserService()
-    user = user_service.create_user(data)
-    return jsonify({"id": user.id, "email": user.email}), 201
+    data = request.form.to_dict()
+    with get_write_db() as write_db, get_read_db() as read_db:
+        user_repo = UserRepository(write_db,read_db)
+        user_service = UserService(user_repo)
+        user = user_service.create_user(**data)
+        print(user)
+    return redirect(url_for('users.login'))
 
 @users.route("/create_credentials", methods=["POST"])
 def create_credentials():
