@@ -38,6 +38,7 @@ document.addEventListener('DOMContentLoaded', async function() {
       
       const fragment = document.createDocumentFragment();
       
+      // Fallback countries if API not working
       const fallbackCountries = [
         { code: 'US', name: 'United States' },
         { code: 'GB', name: 'United Kingdom' },
