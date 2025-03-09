@@ -13,7 +13,7 @@ class UserRepository:
     def get_user_by_id(self, user_id: int) -> User:
         """Fetch a user by ID."""
         return self.read_db_session.query(User).filter(User.id == user_id).first()
- 
+    
     def create_user(self,**kwargs) -> int:
         new_user = User(**kwargs)
         self.write_db_session.add(new_user)

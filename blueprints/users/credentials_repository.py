@@ -21,9 +21,13 @@ class CredentialsRepository:
         """Fetch all credentials (Read-Only)."""
         return self.read_db_session.query(Credentials).all()
 
-    def get_credentials_by_id(self, user_id: int) -> Optional[User]:
+    def get_credentials_by_id(self, user_id: int) -> Optional[Credentials]:
         """Fetch a user by ID (Read-Only)."""
         return self.read_db_session.query(Credentials).filter(Credentials.id == user_id).first()
+    
+    def get_credentials_by_email(self,email:str) -> Optional[Credentials]:
+        return self.read_db_session.query(Credentials).filter(Credentials.email == email).first()
+    
 
     def create_credentials(self, email:str, password:str) -> int:
         """Create new credentials (Write Operation)."""
@@ -46,11 +50,13 @@ class CredentialsRepository:
             user.deleted_at = datetime.now()
         return user
 
-    def update_credentials(self, user_id: int, **kwargs) -> Optional[User]:
+    def update_credentials(self, cred_id: int, **kwargs) -> Optional[User]:
         """Update user fields (Write Operation)."""
-        user = self.get_credentials_by_id(user_id)
-        if user:
+        cred = self.get_credentials_by_id(cred_id)
+        if cred:
             for key, value in kwargs.items():
-                setattr(user, key, value)
-            return user
+                setattr(cred, key, value)
+            return cred
+        self.write_db_session.commit()
+        self.write_db_session.refresh(cred)
         return None

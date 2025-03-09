@@ -65,6 +65,16 @@ def test_get_all_credentials(credentials_service, mock_cred_repo):
     assert result == fake_credentials
     mock_cred_repo.get_all_credentials.assert_called_once()
 
+def test_get_credentials_by_email(credentials_service, mock_cred_repo):
+    """Test fetching all credentials from repository."""
+    fake_credentials = [Credentials(id=1, email="user@example.com", password="hashed")]
+    mock_cred_repo.get_credentials_by_email.return_value = fake_credentials
+
+    result = credentials_service.get_credentials_via_email("user@example.com")
+
+    assert result == fake_credentials
+    mock_cred_repo.get_credentials_by_email.assert_called_once()
+
 def test_create_user_valid(credentials_service, mock_cred_repo):
     """Test creating a user with valid input."""
     user_data = {"first_name": "John", "last_name": "Doe", "email": "john@example.com"}

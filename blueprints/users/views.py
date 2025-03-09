@@ -15,15 +15,18 @@ users = Blueprint(
 )
 
 
-@users.route("/profile")
+@users.route("/login")
 def user_profile():
-    return render_template("users_profile.html", title="User Profile")
+    return render_template("users_login.html")
+
+@users.route("/register")
+def register_user():
+    return render_template("users_register.html")
 
 @users.route("/users", methods=["POST"])
 def create_user():
     """Create a new user."""
     data = request.json
-
     user_service = UserService()
     user = user_service.create_user(data)
     return jsonify({"id": user.id, "email": user.email}), 201
@@ -49,26 +52,4 @@ def create_credentials():
     except Exception as e:
         return jsonify({"error": str(e)}), 400  
     
-@users.route("/get_all_credentials", methods=["GET"])
-def get_all_credentials():
-    try:
-        with get_write_db() as write_db, get_read_db() as read_db:
-            cred_repo = CredentialsRepository(write_db, read_db)
-            cred_service = CredentialsService(cred_repo)
-            credentials = cred_service.get_all_credentials()
 
-        return jsonify([{"id": cred.id, "email": cred.email} for cred in credentials]), 200
-
-    except Exception as e:
-        return jsonify({"error": str(e)}), 400  
-
-
-@users.route("/users/<int:user_id>", methods=["GET"])
-def get_user(user_id):
-    """Retrieve a user by ID."""
-
-    user_service = UserService()
-    user = user_service.get_user(user_id)
-    if user:
-        return jsonify({"id": user.id, "email": user.email})
-    return jsonify({"error": "User not found"}), 404
