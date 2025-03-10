@@ -11,11 +11,13 @@ services:
       - PYTHONUNBUFFERED=1
       - WRITE_DATABASE_URL=postgresql://user:password@postgres-primary:5432/mydb
       - READ_DATABASE_URL=postgresql://user:password@postgres-replica:5432/mydb
+      - REDIS_URL=redis://redis:6379/0
     ports:
       - "8080:8080"
     depends_on:
       - postgres-primary
       - postgres-replica
+      - redis
     command: >
       sh -c "pip install uv && uv venv .venv && uv pip install --system --requirements pyproject.toml && python app.py"
 
@@ -31,20 +33,16 @@ services:
       - "5432:5432"
     volumes:
       - pg_primary_data:/var/lib/postgresql/data
-    # Use a custom entrypoint script to initialize replication
     command: >
       bash -c "
         docker-entrypoint.sh postgres &
-        # Wait for PostgreSQL to start
         until pg_isready -U user -d mydb; do sleep 1; done
-        # Create replication user and configure replication
         psql -v ON_ERROR_STOP=1 -U user -d mydb -c \"CREATE ROLE repl_user WITH REPLICATION LOGIN PASSWORD 'repl_password';\"
         echo \"host replication repl_user 0.0.0.0/0 md5\" >> /var/lib/postgresql/data/pg_hba.conf
         echo \"wal_level = replica\" >> /var/lib/postgresql/data/postgresql.conf
         echo \"max_wal_senders = 10\" >> /var/lib/postgresql/data/postgresql.conf
         echo \"max_replication_slots = 10\" >> /var/lib/postgresql/data/postgresql.conf
         echo \"hot_standby = on\" >> /var/lib/postgresql/data/postgresql.conf
-        # Restart PostgreSQL to apply changes
         pg_ctl -D /var/lib/postgresql/data -m fast -w stop
         exec postgres
       "
@@ -72,24 +70,33 @@ services:
       - pg_replica_data:/var/lib/postgresql/data
     command: >
       bash -c "
-        # Stop PostgreSQL if it's running
         pg_ctl -D /var/lib/postgresql/data -m fast -w stop || true
-        # Clear existing data directory
         rm -rf /var/lib/postgresql/data/*
-        # Create base backup from primary
         PGPASSWORD=repl_password pg_basebackup -h postgres-primary -U repl_user -D /var/lib/postgresql/data -Fp -Xs -P -R
-        # Fix permissions on data directory
         chmod 700 /var/lib/postgresql/data
-        # Create standby signal file
         touch /var/lib/postgresql/data/standby.signal
-        # Configure connection to primary
         echo \"primary_conninfo = 'host=postgres-primary port=5432 user=repl_user password=repl_password application_name=replica'\" >> /var/lib/postgresql/data/postgresql.conf
         echo \"hot_standby = on\" >> /var/lib/postgresql/data/postgresql.conf
-        # Start PostgreSQL in replica mode
         exec postgres
       "
     user: postgres
 
+  redis:
+    image: redis:7
+    container_name: redis
+    restart: always
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    command: ["redis-server", "--appendonly", "yes"]
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
 volumes:
   pg_primary_data:
   pg_replica_data:
+  redis_data:
