@@ -29,7 +29,9 @@ def create_user():
     data = request.form.to_dict()
     with get_write_db() as write_db, get_read_db() as read_db:
         user_repo = UserRepository(write_db_session=write_db,read_db_session=read_db)
-        user_service = UserService(user_repo)
+        cred_repo = CredentialsRepository(write_db, read_db)
+        cred_service = CredentialsService(cred_repo=cred_repo)
+        user_service = UserService(user_repo=user_repo,cred_service=cred_service)
         user = user_service.create_user(**data)
         print(user)
     return redirect(url_for('users.login'))

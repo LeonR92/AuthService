@@ -33,13 +33,15 @@ class CredentialsService:
     
     
 
-    def create_credentials(self, email: str, password: str) -> None:
+    def create_credentials(self, email: str, password: str) -> int:
         """Registers a new user."""
         if not email or not password:
             raise ValueError("Email or Password cannot be empty")
         hashed_password = self.validate_and_hash_pw(password)
-
-        return self.cred_repo.create_credentials(email=email, password=hashed_password)
+        cred_id = self.cred_repo.create_credentials(email=email, password=hashed_password)
+        if not cred_id:
+            raise RuntimeError("Cant create credentials")
+        return cred_id
 
     def get_all_credentials(self) -> List[Credentials]:
         """Fetch all credentials."""
