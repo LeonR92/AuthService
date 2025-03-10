@@ -32,8 +32,7 @@ def create_user():
         cred_repo = CredentialsRepository(write_db, read_db)
         cred_service = CredentialsService(cred_repo=cred_repo)
         user_service = UserService(user_repo=user_repo,cred_service=cred_service)
-        user = user_service.create_user(**data)
-        print(user)
+        user_service.create_user(**data)
     return redirect(url_for('users.login'))
 
 @users.route("/create_credentials", methods=["POST"])
@@ -58,3 +57,7 @@ def create_credentials():
         return jsonify({"error": str(e)}), 400  
     
 
+
+@users.route("/get_user/<int:user_id>")
+def get_user(user_id:int):
+    return render_template("users_login.html")
