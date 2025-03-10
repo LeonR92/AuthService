@@ -1,4 +1,9 @@
 from flask import Blueprint, request
+from blueprints.auth.service import AuthService
+from blueprints.users.credentials_repository import CredentialsRepository
+from blueprints.users.crendentials_service import CredentialsService
+
+from core.database import get_read_db, get_write_db
 
 auth = Blueprint(
     "auth",
@@ -8,8 +13,20 @@ auth = Blueprint(
     url_prefix="/auth"       
 )
 
-@auth.route("/create_user", methods=["POST"])
-def create_user():
-    data = request.form
-    print(data)
-    return data
+@auth.route("/authenticate", methods=["POST"])
+def authenticate_login():
+    with get_write_db() as write_db, get_read_db() as read_db:
+        cred_repo = CredentialsRepository(write_db_session=write_db, read_db_session=read_db)
+        cred_service = CredentialsService(cred_repo=cred_repo)
+        auth_service = AuthService(cred_service=cred_service)
+
+        data = request.form
+        email = data["email"]
+        password = data["password"]
+        try:
+            if auth_service.verify_password(email, password):
+                return "Success"
+            else:
+                return "Failed"
+        except ValueError:
+            return "Failed"
