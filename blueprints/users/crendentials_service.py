@@ -14,8 +14,8 @@ class CredentialsService:
     def validate_and_hash_pw(self,password:str, password_length:int = 8) -> str:
         if not password or password.strip() == "":
             raise ValueError("Password cannot be empty")
-        if len(password) <= password_length:
-            raise ValueError(f"Password cannot be shorther than {password_length}")
+        if len(password) < password_length:
+            raise ValueError(f"Password cannot be shorter than {password_length}")
         hashed_password = bcrypt.hashpw(password.encode("utf-8"), bcrypt.gensalt())
         return hashed_password.decode("utf-8")
 

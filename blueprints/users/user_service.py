@@ -16,6 +16,20 @@ class UserService:
             raise ValueError(f"User with ID {user_id} not found")
         return user
     
+    def get_all_users(self):
+        """Fetch a user by ID and raise an error if not found."""
+        users = self.user_repo.get_all_users()
+        if not users:
+            raise ValueError("no user found")
+        return users
+
+    def get_full_user_details_by_id(self, user_id: int):
+        """Fetch a user by ID and raise an error if not found."""
+        user_details = self.user_repo.get_full_user_details_by_id(user_id)
+        if not user_details:
+            raise ValueError(f"User with ID {user_id} not found")
+        return user_details
+    
     
     def create_user(self, first_name:str, last_name:str, email:str, password:str, mfa_enabled:str,country:Optional[str], dob:Optional[datetime]) -> int:
         """Creates a new user after validating mandatory fields."""
@@ -27,13 +41,16 @@ class UserService:
             pass
         dob = None if not dob or dob.strip() == "" else datetime.strptime(dob, "%Y-%m-%d")
         cred_id = self.cred_service.create_credentials(email = email,password=password)
-        return self.user_repo.create_user(
+        user = self.user_repo.create_user(
             first_name=first_name,
             last_name=last_name,
             country=country,
             dob=dob,
             credentials_id = cred_id
         )
+        if not user:
+            raise RuntimeError("Error creating user")
+        return user
     
     def update_user(self,user_id:int,**kwargs):
         return self.user_repo.update(user_id,**kwargs)

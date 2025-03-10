@@ -58,6 +58,16 @@ def create_credentials():
     
 
 
-@users.route("/get_user/<int:user_id>")
-def get_user(user_id:int):
-    return render_template("users_login.html")
+@users.route("/get_users")
+def get_user():
+     with get_write_db() as write_db, get_read_db() as read_db:
+        user_repo = UserRepository(write_db_session=write_db,read_db_session=read_db)
+        cred_repo = CredentialsRepository(write_db, read_db)
+        cred_service = CredentialsService(cred_repo=cred_repo)
+        user_service = UserService(user_repo=user_repo,cred_service=cred_service)
+        users = user_service.get_all_users()
+        return jsonify([{k: v for k, v in user.__dict__.items() if not k.startswith("_")} for user in users])
+
+
+
+

@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import List, Optional
 from blueprints.users.models import Credentials, User
 from sqlalchemy.orm import Session
 
@@ -13,6 +13,17 @@ class UserRepository:
     def get_user_by_id(self, user_id: int) -> User:
         """Fetch a user by ID."""
         return self.read_db_session.query(User).filter(User.id == user_id).first()
+    
+    def get_all_users(self) -> List[User]:
+        """Fetch all users."""
+        return self.read_db_session.query(User).all()
+    
+    def get_full_user_details_by_id(self, user_id: int) -> User:
+        """Fetch a user by ID."""
+        return (self.read_db_session.query(User,Credentials)
+                .join(Credentials,User.credentials_id == Credentials.id)
+                .filter(User.id == user_id)
+                .first())
     
     def get_user_by_email(self, email: str) -> Optional[User]:
         """Fetch a user by email."""
