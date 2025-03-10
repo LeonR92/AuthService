@@ -1,6 +1,8 @@
 from flask import Blueprint, redirect, render_template, request, jsonify, url_for
 from blueprints.users.credentials_repository import CredentialsRepository
 from blueprints.users.crendentials_service import CredentialsService
+from blueprints.users.mfa_repository import MFARepository
+from blueprints.users.mfa_service import MFAservice
 from blueprints.users.user_repository import UserRepository
 from blueprints.users.user_service import UserService
 from core.database import get_read_db,get_write_db
@@ -31,7 +33,9 @@ def create_user():
         user_repo = UserRepository(write_db_session=write_db,read_db_session=read_db)
         cred_repo = CredentialsRepository(write_db, read_db)
         cred_service = CredentialsService(cred_repo=cred_repo)
-        user_service = UserService(user_repo=user_repo,cred_service=cred_service)
+        mfa_repo = MFARepository(write_db_session=write_db, read_db_session=read_db)
+        mfa_service = MFAservice(mfa_repo=mfa_repo)
+        user_service = UserService(user_repo=user_repo,cred_service=cred_service, mfa_service=mfa_service)
         user_service.create_user(**data)
     return redirect(url_for('users.login'))
 
