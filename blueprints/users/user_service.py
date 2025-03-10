@@ -42,8 +42,8 @@ class UserService:
         
         dob = None if not dob or dob.strip() == "" else datetime.strptime(dob, "%Y-%m-%d")
         cred_id = self.cred_service.create_credentials(email = email,password=password)
-        if mfa_enabled == "true":
-            mfa_id = self.mfa_service.create_mfa_entry()
+        mfa_enabled = mfa_enabled.lower() == "true"
+        mfa_id = self.mfa_service.create_mfa_entry() if mfa_enabled else None
         user_id = self.user_repo.create_user(
             first_name=first_name,
             last_name=last_name,

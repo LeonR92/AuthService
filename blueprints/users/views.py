@@ -39,27 +39,6 @@ def create_user():
         user_service.create_user(**data)
     return redirect(url_for('users.login'))
 
-@users.route("/create_credentials", methods=["POST"])
-def create_credentials():
-    """Create a new user with email and hashed password."""
-    data = request.json
-
-    email = data.get("email")
-    password = data.get("password")
-
-    if not email or not password:
-        return jsonify({"error": "Email and password are required"}), 400
-    try:
-        with get_write_db() as write_db, get_read_db() as read_db:
-            cred_repo = CredentialsRepository(write_db, read_db)
-            cred_service = CredentialsService(cred_repo)
-            credentials = cred_service.create_credentials(email=email, password=password)
-
-        return jsonify({"id": credentials.id, "email": credentials.email}), 201 
-
-    except Exception as e:
-        return jsonify({"error": str(e)}), 400  
-    
 
 
 @users.route("/get_users")
@@ -68,7 +47,9 @@ def get_user():
         user_repo = UserRepository(write_db_session=write_db,read_db_session=read_db)
         cred_repo = CredentialsRepository(write_db, read_db)
         cred_service = CredentialsService(cred_repo=cred_repo)
-        user_service = UserService(user_repo=user_repo,cred_service=cred_service)
+        mfa_repo = MFARepository(write_db_session=write_db, read_db_session=read_db)
+        mfa_service = MFAservice(mfa_repo=mfa_repo)
+        user_service = UserService(user_repo=user_repo,cred_service=cred_service, mfa_service=mfa_service)
         users = user_service.get_all_users()
         return jsonify([{k: v for k, v in user.__dict__.items() if not k.startswith("_")} for user in users])
 
