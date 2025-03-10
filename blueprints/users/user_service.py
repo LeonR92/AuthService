@@ -1,13 +1,15 @@
 from datetime import datetime
 from typing import Optional
+from blueprints.users.mfa_service import MFAservice
 from blueprints.users.user_repository import UserRepository
 from blueprints.users.crendentials_service import CredentialsService
 from core.utils import is_valid_string_value
 
 class UserService:
-    def __init__(self,user_repo:UserRepository, cred_service: CredentialsService) -> None:
+    def __init__(self,user_repo:UserRepository, cred_service: CredentialsService, mfa_service:MFAservice) -> None:
         self.user_repo = user_repo
         self.cred_service = cred_service
+        self.mfa_service = mfa_service
     
     def get_user_by_id(self, user_id: int):
         """Fetch a user by ID and raise an error if not found."""
@@ -37,20 +39,23 @@ class UserService:
             raise ValueError("First and last name cannot be empty")
         if self.user_repo.get_user_by_email(email):
             raise ValueError("Email is already registered")
-        if mfa_enabled == "true":
-            pass
+        
         dob = None if not dob or dob.strip() == "" else datetime.strptime(dob, "%Y-%m-%d")
         cred_id = self.cred_service.create_credentials(email = email,password=password)
-        user = self.user_repo.create_user(
+        if mfa_enabled == "true":
+            mfa_id = self.mfa_service.create_mfa_entry()
+        user_id = self.user_repo.create_user(
             first_name=first_name,
             last_name=last_name,
             country=country,
             dob=dob,
-            credentials_id = cred_id
+            credentials_id = cred_id,
+            mfa_id = mfa_id
         )
-        if not user:
+        if not user_id:
             raise RuntimeError("Error creating user")
-        return user
+
+
     
     def update_user(self,user_id:int,**kwargs):
         return self.user_repo.update(user_id,**kwargs)
