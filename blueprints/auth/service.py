@@ -15,7 +15,7 @@ class AuthService():
     def verify_password(self, email: str, password: str) -> bool:
         """Verifies a user's password against stored credentials."""
         cred = self.cred_service.get_credentials_via_email(email=email)
-
+        # TODO add MFA flow redirection and qr_code
         if not cred or not cred.password:
             raise ValueError("Invalid email or password")
 

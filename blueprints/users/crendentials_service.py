@@ -21,6 +21,7 @@ class CredentialsService:
 
     def get_credentials_via_email(self,email:str) -> Optional[Credentials]:
         credentials =  self.cred_repo.get_credentials_by_email(email=email)
+
         if not credentials:
             raise Exception ("credentials not found")
         return credentials
