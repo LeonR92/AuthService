@@ -16,6 +16,8 @@ class AuthService():
         """Verifies a user's password against stored credentials."""
         cred = self.cred_service.get_credentials_via_email(email=email)
         # TODO add MFA flow redirection and qr_code
+        # Save to session
+        # Password expiry
         if not cred or not cred.password:
             raise ValueError("Invalid email or password")
 
