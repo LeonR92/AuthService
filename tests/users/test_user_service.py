@@ -1,6 +1,7 @@
 import pytest
 from unittest.mock import MagicMock
 from datetime import datetime
+from blueprints.users.mfa_service import MFAservice
 from blueprints.users.user_service import UserService
 from blueprints.users.user_repository import UserRepository
 from blueprints.users.models import User
@@ -16,8 +17,12 @@ def mock_cred_service():
     return MagicMock(spec=CredentialsService)
 
 @pytest.fixture
+def mock_mfa_service():
+    return MagicMock(spec=MFAservice)
+
+@pytest.fixture
 def user_service(mock_user_repo):
-    return UserService(user_repo=mock_user_repo, cred_service=mock_cred_service )
+    return UserService(user_repo=mock_user_repo, cred_service=mock_cred_service, mfa_service=mock_mfa_service )
 
 @pytest.fixture
 def sample_user():

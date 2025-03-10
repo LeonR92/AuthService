@@ -51,15 +51,11 @@ def test_create_mfa_entry_valid(mfa_service, mock_mfa_repo, sample_mfa):
     """Test successfully creating an MFA entry for a user."""
     mock_mfa_repo.create.return_value = sample_mfa
 
-    result = mfa_service.create_mfa_entry(user_id=1)
+    result = mfa_service.create_mfa_entry()
 
     assert result == sample_mfa
     mock_mfa_repo.create.assert_called_once()
 
-def test_create_mfa_entry_missing_user(mfa_service):
-    """Test that creating MFA with missing user ID raises ValueError."""
-    with pytest.raises(ValueError, match="user ID cannot be missing"):
-        mfa_service.create_mfa_entry(None)
 
 def test_change_totp_secret_valid(mfa_service, mock_mfa_repo, sample_mfa):
     """Test successfully changing the TOTP secret."""
