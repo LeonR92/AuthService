@@ -1,22 +1,27 @@
 
 import bcrypt
 from blueprints.users.crendentials_service import CredentialsService
-from blueprints.users.mfa_service import MFAservice
-from blueprints.users.user_service import UserService
-
 
 
 class AuthService():
-    def __init__(self,cred_service:CredentialsService, mfa_service:MFAservice, user_service:UserService) -> None:
+    def __init__(self,cred_service:CredentialsService) -> None:
         self.cred_service = cred_service
-        self.mfa_service = mfa_service
-        self.user_service = user_service
 
-    def verify_password(self,email:str,password:str) -> bool:
+    def _check_password(self, plain_password: str, hashed_password: str) -> bool:
+        """Checks if the provided password matches the stored hashed password."""
+        return bcrypt.checkpw(plain_password.encode("utf-8"), hashed_password.encode("utf-8"))
+    
+
+    def verify_password(self, email: str, password: str) -> bool:
+        """Verifies a user's password against stored credentials."""
         cred = self.cred_service.get_credentials_via_email(email=email)
-        if not cred:
-            return False
-        return bcrypt.checkpw(password.encode("utf-8"), cred.password.encode("utf-8"))
+        # TODO add MFA flow redirection and qr_code
+        # Save to session
+        # Password expiry
+        if not cred or not cred.password:
+            raise ValueError("Invalid email or password")
+
+        return self._check_password(password, cred.password)
     
     def reset_password(self, email: str, new_password:int) -> str:
         """Resets the password and returns the new one."""
@@ -29,36 +34,9 @@ class AuthService():
 
         return new_password
 
-    def activate_mfa(self, email:str):
-        user = self.cred_service.get_credentials_via_email(email=email)
-        if not user:
-            raise Exception(f"No user found with the email:{email}")
-        mfa_id = self.mfa_service.create_mfa_entry()
-        if not mfa_id:
-            raise RuntimeError("Error creating MFA entry")
-        user.mfa_id = mfa_id
-        self.user_service.update_user(user)
-    
-    def deactivate_mfa(self, email: str) -> None:
-        """Deactivates MFA for a user by removing their MFA record."""
-        user = self.cred_service.get_credentials_via_email(email=email)
-        if not user:
-            raise ValueError(f"No user found with the email {email}")
-
-        mfa_info = self.mfa_service.get_mfa_details_via_user_id(user.id)
-        if not mfa_info:
-            raise ValueError(f"No MFA record found for user {email}")
-
-        self.mfa_service.delete_mfa(mfa_info)
-
-
-
-    
 
     def verify_mfa():
         pass
-
-
 
 
     def resend_mfa_seed():

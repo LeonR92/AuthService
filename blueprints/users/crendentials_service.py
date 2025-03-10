@@ -14,13 +14,14 @@ class CredentialsService:
     def validate_and_hash_pw(self,password:str, password_length:int = 8) -> str:
         if not password or password.strip() == "":
             raise ValueError("Password cannot be empty")
-        if len(password) <= password_length:
-            raise ValueError(f"Password cannot be shorther than {password_length}")
+        if len(password) < password_length:
+            raise ValueError(f"Password cannot be shorter than {password_length}")
         hashed_password = bcrypt.hashpw(password.encode("utf-8"), bcrypt.gensalt())
         return hashed_password.decode("utf-8")
 
     def get_credentials_via_email(self,email:str) -> Optional[Credentials]:
         credentials =  self.cred_repo.get_credentials_by_email(email=email)
+
         if not credentials:
             raise Exception ("credentials not found")
         return credentials
@@ -33,13 +34,15 @@ class CredentialsService:
     
     
 
-    def create_credentials(self, email: str, password: str) -> None:
+    def create_credentials(self, email: str, password: str) -> int:
         """Registers a new user."""
         if not email or not password:
             raise ValueError("Email or Password cannot be empty")
         hashed_password = self.validate_and_hash_pw(password)
-
-        return self.cred_repo.create_credentials(email=email, password=hashed_password)
+        cred_id = self.cred_repo.create_credentials(email=email, password=hashed_password)
+        if not cred_id:
+            raise RuntimeError("Cant create credentials")
+        return cred_id
 
     def get_all_credentials(self) -> List[Credentials]:
         """Fetch all credentials."""

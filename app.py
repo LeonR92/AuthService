@@ -2,12 +2,15 @@ from flask import Flask
 from dotenv import load_dotenv
 import os
 from blueprints.users.views import users
+from blueprints.auth.views import auth
 from core.init_db import init_db
 
 
 # Initialize Flask app
 app = Flask(__name__)
 app.register_blueprint(users)
+app.register_blueprint(auth)
+
 
 load_dotenv()
 

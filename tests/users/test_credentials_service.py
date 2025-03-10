@@ -31,7 +31,7 @@ def test_validate_and_hash_pw_invalid_empty(credentials_service, password):
 
 def test_validate_and_hash_pw_too_short(credentials_service):
     """Test that short passwords raise ValueError."""
-    with pytest.raises(ValueError, match="Password cannot be shorther than 8"):
+    with pytest.raises(ValueError, match="Password cannot be shorter than 8"):
         credentials_service.validate_and_hash_pw("short")
 
 def test_create_credentials_valid(credentials_service, mock_cred_repo):

@@ -32,9 +32,7 @@ class MFAservice:
     def create_totp_secret(self) -> str:
         return pyotp.random_base32()
 
-    def create_mfa_entry(self, user_id:int) -> int:
-        if not user_id:
-            raise ValueError("user ID cannot be missing")
+    def create_mfa_entry(self) -> int:
         totp_secret = self.create_totp_secret()
         mfa_id = self.mfa_repo.create(totp_secret=totp_secret)
         return mfa_id
