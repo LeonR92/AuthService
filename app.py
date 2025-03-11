@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, redirect, request, session, url_for
 from dotenv import load_dotenv
 import os
 from blueprints.users.views import users
@@ -13,7 +13,7 @@ from flask_compress import Compress
 # Initialize Flask app
 app = Flask(__name__)
 Compress(app)
-
+init_redis(app)
 app.register_blueprint(users)
 app.register_blueprint(auth)
 app.register_blueprint(dashboard)
@@ -21,6 +21,21 @@ app.register_blueprint(dashboard)
 load_dotenv()
 
 app.config["SECRET_KEY"] = os.getenv("SECRET_KEY")
+
+@app.before_request
+def require_login():
+    # List of exempt routes (login and register routes)
+    exempt_routes = ['users.login', 'users.register_user']
+    
+    # Also exempt static files
+    if request.endpoint and (request.endpoint.endswith('.static') or 'static' in request.path):
+        return None
+    
+    if request.endpoint not in exempt_routes:
+        if not session.get("is_authenticated"):
+            return redirect(url_for('users.login'))
+
+
 
 
 
@@ -30,7 +45,7 @@ def get_users():
 
 # Run app
 if __name__ == "__main__":
-    init_redis(app)
+
     init_db()
     app.run(host="0.0.0.0", port=8080, debug=True)  
 

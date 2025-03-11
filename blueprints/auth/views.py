@@ -48,6 +48,7 @@ def authenticate_login():
     session["user_email"] = email
     session["user_id"] = user_id
     session["is_authenticated"] = True
+    print(session.get("is_authenticated"))
 
     # Redirect to MFA input page if MFA is enabled
     if mfa_enabled:
