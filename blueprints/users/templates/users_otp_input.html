@@ -46,7 +46,7 @@
                     Account</button>
             </div>
         </form>
-        <div class="text-sm text-slate-500 mt-4">Didn't receive code? <a class="font-medium text-indigo-500 hover:text-indigo-600" href="#0">Resend</a></div>
+        <div class="text-sm text-slate-500 mt-4">Resend QR-Code to email? <a class="font-medium text-indigo-500 hover:text-indigo-600" href="{{url_for('users.show_qrcode', user_id = user_id)}}">Resend</a></div>
     </div>
     <script>
         document.addEventListener('DOMContentLoaded', () => {

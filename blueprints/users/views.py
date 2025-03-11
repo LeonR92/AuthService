@@ -1,4 +1,4 @@
-from flask import Blueprint, abort, redirect, render_template, request, jsonify, url_for
+from flask import Blueprint, abort, redirect, render_template, request, jsonify, session, url_for
 from blueprints.users.credentials_repository import CredentialsRepository
 from blueprints.users.crendentials_service import CredentialsService
 from blueprints.users.mfa_repository import MFARepository
@@ -82,4 +82,5 @@ def show_qrcode(user_id: int):
 
 @users.route("/mfa_input")
 def mfa_input():
-    return render_template("users_otp_input.html")
+    user_id = session.get("user_id") 
+    return render_template("users_otp_input.html", user_id = user_id)
