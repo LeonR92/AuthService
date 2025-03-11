@@ -39,15 +39,10 @@ jobs:
       - name: Install Dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install uv
-          uv venv
-          source .venv/bin/activate  # Activate the virtual environment
-          uv pip install "bcrypt>=4.3.0" "flask>=3.1.0" "flask-migrate>=4.1.0" "psycopg2>=2.9.10" "pyotp>=2.9.0" "python-dotenv>=1.0.1" "sqlalchemy>=2.0.38"
-          uv pip install pytest ruff
-          uv pip install qrcode
-          uv pip install pillow
+          pip install "bcrypt>=4.3.0" "flask>=3.1.0" "flask-migrate>=4.1.0" "psycopg2>=2.9.10" "pyotp>=2.9.0" "python-dotenv>=1.0.1" "sqlalchemy>=2.0.38"
+          pip install pytest ruff qrcode pillow
           echo "PYTHONPATH=$PYTHONPATH:$(pwd)" >> $GITHUB_ENV
-          uv pip list
+          pip list
 
       - name: Run Ruff Linting
         run: |
