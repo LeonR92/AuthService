@@ -1,14 +1,10 @@
 from flask import Blueprint, jsonify, redirect, request, session, url_for
-from blueprints.auth.service import AuthService
-from blueprints.users.credentials_repository import CredentialsRepository
-from blueprints.users.crendentials_service import CredentialsService
 from blueprints.users.mfa_repository import MFARepository
 from blueprints.users.mfa_service import MFAservice
-from blueprints.users.user_repository import UserRepository
-from blueprints.users.user_service import UserService
 
 
 from core.database import get_read_db, get_write_db
+from core.di import create_auth_service, create_mfa_service, create_user_service
 
 auth = Blueprint(
     "auth",
@@ -31,17 +27,11 @@ def authenticate_login():
         return jsonify({"error": "Email and password are required"}), 400
     
     with get_read_db() as read_db, get_write_db() as write_db:
-        cred_repo = CredentialsRepository(write_db_session=write_db,read_db_session=read_db)
-        cred_service = CredentialsService(cred_repo=cred_repo)
-        auth_service = AuthService(cred_service=cred_service)
-        mfa_repo = MFARepository(read_db_session=read_db,write_db_session=write_db)
-        mfa_service = MFAservice(mfa_repo=mfa_repo)
-        user_repo = UserRepository(write_db_session=write_db,read_db_session=read_db)
-        user_service = UserService(user_repo=user_repo, cred_service=cred_service , mfa_service=mfa_service)
-
+        user_service = create_user_service(read_db=read_db,write_db=write_db)
+        auth_service = create_auth_service(read_db=read_db, write_db=write_db)
         if not auth_service.verify_password(email, password):
             return jsonify({"error": "Authentication failed"}), 401
-
+        mfa_service = create_mfa_service(read_db=read_db,write_db=write_db)
         mfa_enabled = mfa_service.get_mfa_details_via_email(email=email)
         user_id = user_service.get_userid_by_email(email=email)
 
