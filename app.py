@@ -5,12 +5,13 @@ from blueprints.users.views import users
 from blueprints.auth.views import auth
 from core.init_db import init_db
 from core.init_redis import init_redis
+from flask_compress import Compress
 
 
 
 # Initialize Flask app
 app = Flask(__name__)
-
+Compress(app)
 
 app.register_blueprint(users)
 app.register_blueprint(auth)
