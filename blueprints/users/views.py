@@ -55,4 +55,6 @@ def get_user():
 
 
 
-
+@users.route("/mfa_input")
+def mfa_input():
+    return "MFA input page"
