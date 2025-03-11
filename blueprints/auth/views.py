@@ -60,6 +60,8 @@ def authenticate_login():
 @auth.route("/verify_otp", methods=["POST"])
 def verify_otp():
     """Verify OTP code for MFA authentication"""
+    if not session.get("is_authenticated"):
+        return redirect(url_for("users.login"))
     totp = request.form.get("code")
     user_id = session.get("user_id")  
 
