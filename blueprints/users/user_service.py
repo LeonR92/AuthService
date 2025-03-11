@@ -54,6 +54,7 @@ class UserService:
         )
         if not user_id:
             raise RuntimeError("Error creating user")
+        return user_id
 
 
     
