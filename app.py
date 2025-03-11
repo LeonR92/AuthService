@@ -3,6 +3,7 @@ from dotenv import load_dotenv
 import os
 from blueprints.users.views import users
 from blueprints.auth.views import auth
+from blueprints.dashboard.views import dashboard
 from core.init_db import init_db
 from core.init_redis import init_redis
 from flask_compress import Compress
@@ -15,6 +16,7 @@ Compress(app)
 
 app.register_blueprint(users)
 app.register_blueprint(auth)
+app.register_blueprint(dashboard)
 
 load_dotenv()
 
