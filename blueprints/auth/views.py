@@ -49,3 +49,9 @@ def authenticate_login():
         return redirect(url_for("users.mfa_input"))
 
     return jsonify({"message": "Authenticated successfully"}), 200
+
+
+@auth.route("/verify_otp", methods=["POST"])
+def verify_otp():
+    totp = request.form.get('code')
+    return totp
