@@ -28,11 +28,12 @@ def authenticate_login():
     if not email or not password:
         return jsonify({"error": "Email and password are required"}), 400
 
-    with get_read_db() as read_db:
-        cred_repo = CredentialsRepository(read_db_session=read_db)
-        auth_service = AuthService(cred_repo=cred_repo)
+    with get_read_db() as read_db, get_write_db() as write_db:
+        cred_repo = CredentialsRepository(write_db_session=write_db,read_db_session=read_db)
+        cred_service = CredentialsService(cred_repo=cred_repo)
+        auth_service = AuthService(cred_service=cred_service)
         
-        mfa_repo = MFARepository(read_db_session=read_db)
+        mfa_repo = MFARepository(read_db_session=read_db,write_db_session=write_db)
         mfa_service = MFAservice(mfa_repo=mfa_repo)
 
         if not auth_service.verify_password(email, password):
@@ -45,6 +46,6 @@ def authenticate_login():
 
     # Redirect to MFA input page if MFA is enabled
     if mfa_enabled:
-        return redirect(url_for("user.mfa_input"))
+        return redirect(url_for("users.mfa_input"))
 
     return jsonify({"message": "Authenticated successfully"}), 200

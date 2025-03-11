@@ -25,7 +25,7 @@ class MFARepository():
     def get_mfa_details_via_email(self, email: str):
         """Fetches MFA details for a user based on email."""
         return (
-            self.read_db_session(User) 
+            self.read_db_session.query(User) 
             .join(Credentials, User.credentials_id == Credentials.id)
             .join(MFA, User.mfa_id == MFA.id)
             .filter(Credentials.email == email)
