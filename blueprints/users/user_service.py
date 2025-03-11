@@ -18,6 +18,16 @@ class UserService:
             raise ValueError(f"User with ID {user_id} not found")
         return user
     
+    def get_userid_by_email(self, email: str) -> int | None:
+        """Fetches user ID based on email. Returns None if not found."""
+        
+        if not email:
+            raise ValueError("Email is required")
+        
+        user_id = self.user_repo.get_userid_by_email(email=email)
+
+        return user_id[0] if user_id else None 
+
     def get_all_users(self):
         """Fetch a user by ID and raise an error if not found."""
         users = self.user_repo.get_all_users()

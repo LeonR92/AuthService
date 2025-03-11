@@ -80,7 +80,6 @@ def show_qrcode(user_id: int):
         )
 
 
-
 @users.route("/mfa_input")
 def mfa_input():
     return render_template("users_otp_input.html")
