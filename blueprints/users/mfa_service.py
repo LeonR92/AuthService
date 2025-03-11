@@ -49,29 +49,20 @@ class MFAservice:
         return new_totp_secret
     
     
-    def create_qrcode_totp(self, email: str, user_id: int = None) -> dict:
-        """
-        Create a QR code for TOTP setup with an authenticator app.
-        
-        Args:
-            email: The user's email
-            user_id: Optional user ID to fetch existing secret
-            
-        Returns:
-            Dict with:
-                - qr_code_base64: Base64 encoded QR code image
-                - secret_key: The secret key used
-        """
-        # Get existing secret or create new one
+    def create_qrcode_totp(self, name: str, user_id: int = None) -> dict:
         if user_id:
-            mfa_details = self.get_mfa_details_via_user_id(user_id)
-            secret_key = mfa_details.totp_secret
+            try:
+                mfa_details = self.get_mfa_details_via_user_id(user_id)
+                secret_key = mfa_details.totp_secret
+            except Exception:
+                # No existing MFA for this user, create a new secret
+                secret_key = self.create_totp_secret()
         else:
             secret_key = self.create_totp_secret()
         
         totp = pyotp.TOTP(secret_key)
         provisioning_uri = totp.provisioning_uri(
-            name=email,
+            name=name,
             issuer_name="BookStore"
         )
         
@@ -95,6 +86,7 @@ class MFAservice:
             "qr_code_base64": qr_code_base64,
             "secret_key": secret_key
         }
+
     
     def verify_totp(self, secret_key: str, token: str) -> bool:
         """

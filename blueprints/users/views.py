@@ -54,40 +54,30 @@ def get_user():
         return jsonify([{k: v for k, v in user.__dict__.items() if not k.startswith("_")} for user in users])
 
 @users.route("/show_qr_code/<int:user_id>")
-def show_qrcode(user_id:int):
+def show_qrcode(user_id: int):
+    """Display QR code for MFA setup for both new and existing users"""
     with get_write_db() as write_db, get_read_db() as read_db:
         user_repo = UserRepository(write_db_session=write_db,read_db_session=read_db)
-        user_service = UserService(user_repo=user_repo)
-        mfa_repo = MFARepository(write_db_session=write_db,read_db_session=read_db)
+        cred_repo = CredentialsRepository(write_db, read_db)
+        cred_service = CredentialsService(cred_repo=cred_repo)
+        mfa_repo = MFARepository(write_db_session=write_db, read_db_session=read_db)
         mfa_service = MFAservice(mfa_repo=mfa_repo)
+        user_service = UserService(user_repo=user_repo,cred_service=cred_service, mfa_service=mfa_service)
         
         user = user_service.get_user_by_id(user_id)
         if not user:
-            abort(404)  
+            abort(404)
+            
+        name = f"{user.last_name} {user.first_name}"
         
-        email = user.email
+        qr_data = mfa_service.create_qrcode_totp(name=name, user_id=user_id)
         
-        # Check if user already has MFA
-        try:
-            # Try to get existing MFA details
-            mfa_details = mfa_service.get_mfa_details_via_user_id(user_id)
-            has_existing_mfa = True
-        except Exception:
-            has_existing_mfa = False
-        
-        # Generate QR code
-        qr_data = mfa_service.create_qrcode_totp(email=email, user_id=user_id if has_existing_mfa else None)
-    
-
-    # Render the template with the QR code
-    return render_template(
-        'users/mfa_setup.html',
-        qr_code=qr_data['qr_code_base64'],
-        user_id=user_id,
-        email=email,
-        is_new_setup=not has_existing_mfa
-    )
-        
+        return render_template(
+            'users/mfa_setup.html',
+            qr_code=qr_data['qr_code_base64'],
+            user_id=user_id,
+            name=name
+        )
 
 
 

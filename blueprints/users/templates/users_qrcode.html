@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div class="container py-5">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card shadow">
+                    <div class="card-header bg-primary text-white">
+                        <h3 class="mb-0">Multi-Factor Authentication QR Code</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-4 text-center">
+                            <h4>Scan this QR Code with your Authentication App</h4>
+                            <p class="mb-4">Use an authenticator app like Google Authenticator, Microsoft Authenticator, or Authy</p>
+                            
+                            <div class="p-4 bg-light rounded d-inline-block">
+                                <img src="data:image/png;base64,{{ qr_code }}" alt="MFA QR Code" class="img-fluid">
+                            </div>
+                        </div>
+                        
+                        <div class="mt-4">
+                            <h5>Important Information</h5>
+                            <ul>
+                                <li>This QR code is associated with: <strong>{{ name }}</strong></li>
+                                <li>Scanning this QR code will add a new entry to your authenticator app</li>
+                                <li>You'll need to enter the 6-digit code from your authenticator app when logging in</li>
+                                <li>If you lose access to your authenticator app, you'll need administrator assistance to reset your MFA</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <a href="{{ url_for('users.profile') }}" class="btn btn-primary">Back to Profile</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
