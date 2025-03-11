@@ -29,7 +29,7 @@ def authenticate_login():
 
     if not email or not password:
         return jsonify({"error": "Email and password are required"}), 400
-
+    
     with get_read_db() as read_db, get_write_db() as write_db:
         cred_repo = CredentialsRepository(write_db_session=write_db,read_db_session=read_db)
         cred_service = CredentialsService(cred_repo=cred_repo)

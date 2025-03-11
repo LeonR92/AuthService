@@ -17,3 +17,8 @@ dashboard = Blueprint(
 @dashboard.route("/test")
 def test_dashboard():
     return render_template("test_dashboard.html")
+
+
+@dashboard.route("/welcome/<int:user_id>")
+def user_dashboard(user_id:int):
+    return render_template("test_dashboard.html")
