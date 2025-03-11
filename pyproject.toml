@@ -11,9 +11,11 @@ dependencies = [
     "flask-compress>=1.17",
     "flask-migrate>=4.1.0",
     "flask-session>=0.8.0",
+    "pillow>=11.1.0",
     "psycopg2>=2.9.10",
     "pyotp>=2.9.0",
     "python-dotenv>=1.0.1",
+    "qrcode>=8.0",
     "redis>=5.2.1",
     "sqlalchemy>=2.0.38",
 ]

@@ -14,6 +14,12 @@ class UserRepository:
         """Fetch a user by ID."""
         return self.read_db_session.query(User).filter(User.id == user_id).first()
     
+    def get_userid_by_email(self,email:str) -> int:
+        return (self.read_db_session.query(User.id)
+                .join(Credentials, Credentials.id == User.credentials_id)
+                .filter(Credentials.email == email)
+                .first())
+    
     def get_all_users(self) -> List[User]:
         """Fetch all users."""
         return self.read_db_session.query(User).all()
