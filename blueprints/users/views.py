@@ -73,7 +73,7 @@ def show_qrcode(user_id: int):
         qr_data = mfa_service.create_qrcode_totp(name=name, user_id=user_id)
         
         return render_template(
-            'users/mfa_setup.html',
+            'users_qrcode.html',
             qr_code=qr_data['qr_code_base64'],
             user_id=user_id,
             name=name

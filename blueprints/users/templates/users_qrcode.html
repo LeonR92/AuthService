@@ -3,41 +3,92 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Multi-Factor Authentication</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    typography: {
+                        DEFAULT: {
+                            css: {
+                                maxWidth: '65ch',
+                                color: '#333',
+                                p: {
+                                    color: '#4b5563',
+                                },
+                            },
+                        },
+                    },
+                }
+            }
+        }
+    </script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
 </head>
-<body>
-    <div class="container py-5">
-        <div class="row justify-content-center">
-            <div class="col-md-8">
-                <div class="card shadow">
-                    <div class="card-header bg-primary text-white">
-                        <h3 class="mb-0">Multi-Factor Authentication QR Code</h3>
-                    </div>
-                    <div class="card-body">
-                        <div class="mb-4 text-center">
-                            <h4>Scan this QR Code with your Authentication App</h4>
-                            <p class="mb-4">Use an authenticator app like Google Authenticator, Microsoft Authenticator, or Authy</p>
-                            
-                            <div class="p-4 bg-light rounded d-inline-block">
-                                <img src="data:image/png;base64,{{ qr_code }}" alt="MFA QR Code" class="img-fluid">
-                            </div>
+<body class="bg-gray-50 min-h-screen font-serif">
+    <div class="max-w-4xl mx-auto px-4 py-12">
+        <div class="prose lg:prose-xl mx-auto mb-8">
+            <h1 class="text-center text-gray-800 mb-2">Secure Your Account</h1>
+            <p class="text-center text-gray-600">Set up two-factor authentication to add an extra layer of security.</p>
+        </div>
+        
+        <div class="bg-white rounded-xl shadow-md overflow-hidden">
+            <div class="bg-gradient-to-r from-indigo-500 to-purple-600 px-6 py-4">
+                <h2 class="text-xl font-bold text-white">Multi-Factor Authentication Setup</h2>
+            </div>
+            
+            <div class="p-8">
+                <div class="mb-10 text-center">
+                    <h3 class="text-xl font-semibold text-gray-800 mb-3">Scan this QR Code</h3>
+                    <p class="text-gray-600 mb-6">Use an authenticator app like Google Authenticator, Microsoft Authenticator, or Authy</p>
+                    
+                    <div class="inline-block p-4 bg-gray-50 border border-gray-200 rounded-lg shadow-inner">
+                        <div class="p-2 bg-white rounded-md shadow-sm">
+                            <img src="data:image/png;base64,{{ qr_code }}" alt="MFA QR Code" class="h-56 w-56 mx-auto">
                         </div>
-                        
-                        <div class="mt-4">
-                            <h5>Important Information</h5>
-                            <ul>
-                                <li>This QR code is associated with: <strong>{{ name }}</strong></li>
-                                <li>Scanning this QR code will add a new entry to your authenticator app</li>
-                                <li>You'll need to enter the 6-digit code from your authenticator app when logging in</li>
-                                <li>If you lose access to your authenticator app, you'll need administrator assistance to reset your MFA</li>
-                            </ul>
-                        </div>
-                    </div>
-                    <div class="card-footer">
-                        <a href="{{ url_for('users.profile') }}" class="btn btn-primary">Back to Profile</a>
                     </div>
                 </div>
+                
+                <div class="bg-gray-50 rounded-lg p-6 border-l-4 border-indigo-500">
+                    <h4 class="font-medium text-lg text-gray-800 mb-3 flex items-center">
+                        <i class="fas fa-info-circle text-indigo-500 mr-2"></i>
+                        Important Information
+                    </h4>
+                    <ul class="space-y-3 text-gray-700">
+                        <li class="flex items-start">
+                            <i class="fas fa-user text-indigo-400 mt-1 mr-2"></i>
+                            <span>This QR code is associated with: <strong class="text-gray-900">{{ name }}</strong></span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-qrcode text-indigo-400 mt-1 mr-2"></i>
+                            <span>Scanning this QR code will add a new entry to your authenticator app</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-key text-indigo-400 mt-1 mr-2"></i>
+                            <span>You'll need to enter the 6-digit code from your authenticator app when logging in</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-exclamation-triangle text-indigo-400 mt-1 mr-2"></i>
+                            <span>If you lose access to your authenticator app, you'll need administrator assistance to reset your MFA</span>
+                        </li>
+                    </ul>
+                </div>
             </div>
+            
+            <div class="px-6 py-4 bg-gray-50 border-t border-gray-200">
+                <div class="flex justify-between items-center">
+                    <span class="text-sm text-gray-500">BookStore Security</span>
+                    <a href="#" class="px-5 py-2 bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-medium rounded-md hover:from-indigo-700 hover:to-purple-700 transition duration-300 ease-in-out flex items-center">
+                        <i class="fas fa-arrow-left mr-2"></i>
+                        Back to Profile
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="mt-8 text-center text-gray-500 text-sm">
+            <p>Need help? Contact our <a href="#" class="text-indigo-600 hover:text-indigo-800 underline">support team</a>.</p>
         </div>
     </div>
 </body>
