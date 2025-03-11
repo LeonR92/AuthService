@@ -1,4 +1,4 @@
-from flask import Blueprint, request
+from flask import Blueprint, jsonify, request, session
 from blueprints.auth.service import AuthService
 from blueprints.users.credentials_repository import CredentialsRepository
 from blueprints.users.crendentials_service import CredentialsService
@@ -25,8 +25,10 @@ def authenticate_login():
         password = data["password"]
         try:
             if auth_service.verify_password(email, password):
-                return "Success"
+                session["user_email"] = email
+                session["is_authenticated"] = True
+                return jsonify({"message": "Authenticated successfully"}), 200
             else:
-                return "Failed"
+                return jsonify({"error": "Invalid credentials"}), 401
         except ValueError:
             return "Failed"
