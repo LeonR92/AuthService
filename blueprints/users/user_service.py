@@ -18,7 +18,7 @@ class UserService:
             raise ValueError(f"User with ID {user_id} not found")
         return user
     
-    def get_userid_by_email(self, email: str) -> int | None:
+    def get_userid_by_email(self, email: str) -> Optional[int]:
         """Fetches user ID based on email. Returns None if not found."""
         
         if not email:
