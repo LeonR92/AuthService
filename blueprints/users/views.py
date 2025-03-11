@@ -36,7 +36,7 @@ def create_user():
         mfa_repo = MFARepository(write_db_session=write_db, read_db_session=read_db)
         mfa_service = MFAservice(mfa_repo=mfa_repo)
         user_service = UserService(user_repo=user_repo,cred_service=cred_service, mfa_service=mfa_service)
-        user_id = user_service.create_user(**data)
+        user_service.create_user(**data)
     return redirect(url_for('users.login'))
 
 
