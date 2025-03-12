@@ -20,6 +20,12 @@ class UserRepository:
                 .filter(Credentials.email == email)
                 .first())
     
+    def get_username_by_userid(self, user_id: int) -> tuple[str, str] | None:
+            """Fetches first and last name from the database."""
+            return (self.db_session.query(User.first_name, User.last_name)
+                    .filter(User.id == user_id)
+                    .first())
+    
     def get_all_users(self) -> List[User]:
         """Fetch all users."""
         return self.read_db_session.query(User).all()
