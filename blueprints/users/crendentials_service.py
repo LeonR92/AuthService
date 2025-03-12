@@ -78,6 +78,18 @@ class CredentialsService:
             raise ValueError("Invalid or empty data")
         return self.cred_repo.create_credentials(**data)
     
+    def change_password(self, user_id: int, new_password: str) -> None:
+        """Changes the password for a given user, ensuring validation and secure hashing."""
+        
+        cred = self.cred_repo.get_credentials_by_id(user_id=user_id)
+        if cred is None:
+            raise ValueError("User not found")
+        
+        new_hashed_password = self.validate_and_hash_pw(new_password)
+        self.cred_repo.update_credentials(cred_id=cred.id, password=new_hashed_password)
+
+        
+    
     def update(self, cred_id: int, password: Optional[str] = None):
         """Updates a user's credentials."""
         if not cred_id:

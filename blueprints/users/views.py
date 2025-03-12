@@ -82,4 +82,18 @@ def reset_password():
 
         return f"{new_password} is your new password in the demo session. In prod, it will be sent to your email."
 
+@users.route("/change_password", methods=["GET"])
+def change_password_form():
+    return render_template("users_changepw.html")
+
+
+@users.route("/change_password", methods=["POST"])
+def change_password():
+    user_id = session.get("user_id") 
+    old_password = request.form.get("old_pw")
+    new_password = request.form.get("newspassword")
+    confirm_new_pw = request.form.get("confirmpassword")
+    return render_template("users_otp_input.html", user_id = user_id)
+
+
     
