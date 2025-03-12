@@ -40,10 +40,11 @@ def get_user():
         users = user_service.get_all_users()
         return jsonify([{k: v for k, v in user.__dict__.items() if not k.startswith("_")} for user in users])
 
-@users.route("/show_qr_code/<int:user_id>")
-def show_qrcode(user_id: int):
+@users.route("/show_qr_code")
+def show_qrcode():
     """Display QR code for MFA setup for both new and existing users"""
     with get_write_db() as write_db, get_read_db() as read_db:
+        user_id = session.get("user_id")
         user_service = create_user_service(write_db=write_db, read_db=read_db)
         user = user_service.get_user_by_id(user_id)
         if not user:
@@ -88,8 +89,7 @@ def logout():
 
 @users.route("/mfa_input")
 def mfa_input():
-    user_id = session.get("user_id") 
-    return render_template("users_otp_input.html", user_id = user_id)
+    return render_template("users_otp_input.html")
 
 @users.route("reset_password", methods=["POST"])
 def reset_password():
