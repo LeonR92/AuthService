@@ -20,7 +20,7 @@
             <p>Welcome {{username}},</p>
           </div>
           <nav class="hidden md:flex md:gap-x-11 md:text-sm/6 md:font-semibold md:text-gray-700">
-            <a href="#">Home</a>
+            <a href="{{url_for('users.activate_mfa')}}">Activate MFA</a>
             <a href="{{url_for('users.change_password_form')}}">Change password</a>
             <form action="{{ url_for('users.reset_password') }}" method="post">
               <button type="submit">Reset password</button>
@@ -50,7 +50,7 @@
               </div>
             </div>
             <div class="mt-2 space-y-2">
-              <a href="#">Home</a>
+              <a href="{{url_for('users.activate_mfa')}}">Activate MFA</a>
               <a href="{{url_for('users.change_password_form')}}">Change password</a>
               <form action="{{ url_for('users.reset_password') }}" method="post">
                 <button type="submit">Reset password</button>
