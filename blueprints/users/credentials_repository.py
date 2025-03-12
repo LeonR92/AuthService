@@ -28,6 +28,16 @@ class CredentialsRepository:
     def get_credentials_by_email(self,email:str) -> Optional[Credentials]:
         return self.read_db_session.query(Credentials).filter(Credentials.email == email).first()
     
+    def get_email_by_userid(self, user_id: int) -> Optional[str]:
+        """Fetches the email of a user by user ID."""
+        result = (
+            self.read_db_session.query(Credentials.email)
+            .join(User, User.credentials_id == Credentials.id)
+            .filter(User.id == user_id)
+            .first()
+        )
+        
+        return result[0] if result else None
 
     def create_credentials(self, email:str, password:str) -> int:
         """Create new credentials (Write Operation)."""

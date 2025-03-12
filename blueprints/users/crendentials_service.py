@@ -28,6 +28,14 @@ class CredentialsService:
             raise Exception ("credentials not found")
         return credentials
     
+    def get_email_by_userid(self,user_id:int) -> Optional[str]:
+        if not user_id:
+            ValueError("User ID cannot be empty")
+        email = self.cred_repo.get_email_by_userid(user_id=user_id)
+        if not email:
+            raise ValueError("Email not found")
+        return email
+    
     def get_id_via_email(self,email:str) -> Optional[int]:
         cred =  self.cred_repo.get_credentials_by_email(email=email)
         if not cred:
@@ -46,7 +54,7 @@ class CredentialsService:
             raise ValueError(f"No credentials found for email: {email}")
         new_password= self.generate_random_password()
         new_hashed_password = self.validate_and_hash_pw(new_password)
-        self.cred_repo.update_credentials(new_hashed_password,cred_id=credentials.id)
+        self.cred_repo.update_credentials(cred_id=credentials.id, password=new_hashed_password)
         return new_password
 
 

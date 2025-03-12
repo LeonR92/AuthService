@@ -1,5 +1,5 @@
 from flask import Blueprint, abort, redirect, render_template, request, jsonify, session, url_for
-from core.di import create_mfa_service, create_user_service
+from core.di import create_auth_service, create_credentials_service, create_mfa_service, create_user_service
 
 from core.database import get_read_db,get_write_db
 
@@ -66,3 +66,15 @@ def show_qrcode(user_id: int):
 def mfa_input():
     user_id = session.get("user_id") 
     return render_template("users_otp_input.html", user_id = user_id)
+
+@users.route("reset_password", methods=["POST"])
+def reset_password():
+    with get_write_db() as write_db, get_read_db() as read_db:
+        cred_service = create_credentials_service(write_db=write_db, read_db=read_db)
+        user_id = session.get("user_id")
+        email = cred_service.get_email_by_userid(user_id)
+        print(email)
+        new_password = cred_service.reset_password(email=email)
+        return f"{new_password} is your new password in the demo session. In prod, it will be sent to your email."
+
+    
