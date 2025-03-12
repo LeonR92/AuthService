@@ -24,14 +24,9 @@ app.config["SECRET_KEY"] = os.getenv("SECRET_KEY")
 
 @app.before_request
 def require_login():
-    # List of exempt routes (login and register routes)
-    exempt_routes = ['users.login', 'users.register_user']
-    
-    # Also exempt static files
-    if request.endpoint and (request.endpoint.endswith('.static') or 'static' in request.path):
-        return None
-    
-    if request.endpoint not in exempt_routes:
+    """Function to block access to the dashboard blueprint for unauthenticated users."""
+    # Check if the request is for a route under the dashboard blueprint
+    if request.endpoint and request.endpoint.startswith('dashboard'):
         if not session.get("is_authenticated"):
             return redirect(url_for('users.login'))
 

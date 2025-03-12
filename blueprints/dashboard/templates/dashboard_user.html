@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Dummy Dashboard</title>
     <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
 
 </head>
@@ -17,25 +17,22 @@
                 <path fill-rule="evenodd" d="M2 4.75A.75.75 0 0 1 2.75 4h14.5a.75.75 0 0 1 0 1.5H2.75A.75.75 0 0 1 2 4.75ZM2 10a.75.75 0 0 1 .75-.75h14.5a.75.75 0 0 1 0 1.5H2.75A.75.75 0 0 1 2 10Zm0 5.25a.75.75 0 0 1 .75-.75h14.5a.75.75 0 0 1 0 1.5H2.75a.75.75 0 0 1-.75-.75Z" clip-rule="evenodd" />
               </svg>
             </button>
-            <p>Welcome,</p>
+            <p>Welcome {{username}},</p>
           </div>
           <nav class="hidden md:flex md:gap-x-11 md:text-sm/6 md:font-semibold md:text-gray-700">
             <a href="#">Home</a>
             <a href="#">Invoices</a>
-            <a href="#">Clients</a>
-            <a href="#">Expenses</a>
-          </nav>
-          <div class="flex flex-1 items-center justify-end gap-x-8">
-            <button type="button" class="-m-2.5 p-2.5 text-gray-400 hover:text-gray-500">
-              <span class="sr-only">View notifications</span>
-              <svg class="size-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true" data-slot="icon">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M14.857 17.082a23.848 23.848 0 0 0 5.454-1.31A8.967 8.967 0 0 1 18 9.75V9A6 6 0 0 0 6 9v.75a8.967 8.967 0 0 1-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 0 1-5.714 0m5.714 0a3 3 0 1 1-5.714 0" />
-              </svg>
-            </button>
-          </div>
+            <form action="{{ url_for('users.reset_password') }}" method="post">
+              <button type="submit">Reset password</button>
+          </form>  
+            <form action="{{ url_for('users.logout') }}" method="post">
+              <button type="submit">Logout</button>
+          </form>          
+        </nav>
+        
         </div>
         <!-- Mobile menu, show/hide based on menu open state. -->
-        <div class="lg:hidden" role="dialog" aria-modal="true">
+        <div class="hidden" role="dialog" aria-modal="true">
           <!-- Background backdrop, show/hide based on slide-over state. -->
           <div class="fixed inset-0 z-50"></div>
           <div class="fixed inset-y-0 left-0 z-50 w-full overflow-y-auto bg-white px-4 pb-6 sm:max-w-sm sm:px-6 sm:ring-1 sm:ring-gray-900/10">
@@ -49,15 +46,18 @@
               <div class="-ml-0.5">
                 <a href="#" class="-m-1.5 block p-1.5">
                   <span class="sr-only">Your Company</span>
-                  <img class="h-8 w-auto" src="https://tailwindcss.com/plus-assets/img/logos/mark.svg?color=indigo&shade=600" alt="">
                 </a>
               </div>
             </div>
             <div class="mt-2 space-y-2">
-              <a href="#" class="-mx-3 block rounded-lg px-3 py-2 text-base/7 font-semibold text-gray-900 hover:bg-gray-50">Home</a>
-              <a href="#" class="-mx-3 block rounded-lg px-3 py-2 text-base/7 font-semibold text-gray-900 hover:bg-gray-50">Invoices</a>
-              <a href="#" class="-mx-3 block rounded-lg px-3 py-2 text-base/7 font-semibold text-gray-900 hover:bg-gray-50">Clients</a>
-              <a href="#" class="-mx-3 block rounded-lg px-3 py-2 text-base/7 font-semibold text-gray-900 hover:bg-gray-50">Expenses</a>
+              <a href="#">Home</a>
+              <a href="#">Invoices</a>
+              <form action="{{ url_for('users.reset_password') }}" method="post">
+                <button type="submit">Reset password</button>
+            </form> 
+              <form action="{{ url_for('users.logout') }}" method="post">
+                <button type="submit">Logout</button>
+            </form>
             </div>
           </div>
         </div>
@@ -68,7 +68,7 @@
           <!-- Secondary navigation -->
           <header class="pt-6 pb-4 sm:pb-6">
             <div class="mx-auto flex max-w-7xl flex-wrap items-center gap-6 px-4 sm:flex-nowrap sm:px-6 lg:px-8">
-              <h1 class="text-base/7 font-semibold text-gray-900">Cashflow</h1>
+              <h1 class="text-base/7 font-semibold text-gray-900">Dummy Dashboard</h1>
               <div class="order-last flex w-full gap-x-8 text-sm/6 font-semibold sm:order-none sm:w-auto sm:border-l sm:border-gray-200 sm:pl-6 sm:text-sm/7">
                 <a href="#" class="text-indigo-600">Last 7 days</a>
                 <a href="#" class="text-gray-700">Last 30 days</a>
@@ -295,7 +295,7 @@
                           From: "transform opacity-100 scale-100"
                           To: "transform opacity-0 scale-95"
                       -->
-                      <div class="absolute right-0 z-10 mt-0.5 w-32 origin-top-right rounded-md bg-white py-2 ring-1 shadow-lg ring-gray-900/5 focus:outline-hidden" role="menu" aria-orientation="vertical" aria-labelledby="options-menu-0-button" tabindex="-1">
+                      <div class="absolute hidden right-0 z-10 mt-0.5 w-32 origin-top-right rounded-md bg-white py-2 ring-1 shadow-lg ring-gray-900/5 focus:outline-hidden" role="menu" aria-orientation="vertical" aria-labelledby="options-menu-0-button" tabindex="-1">
                         <!-- Active: "bg-gray-50 outline-hidden", Not Active: "" -->
                         <a href="#" class="block px-3 py-1 text-sm/6 text-gray-900" role="menuitem" tabindex="-1" id="options-menu-0-item-0">View<span class="sr-only">, Tuple</span></a>
                         <a href="#" class="block px-3 py-1 text-sm/6 text-gray-900" role="menuitem" tabindex="-1" id="options-menu-0-item-1">Edit<span class="sr-only">, Tuple</span></a>
@@ -338,7 +338,7 @@
                           From: "transform opacity-100 scale-100"
                           To: "transform opacity-0 scale-95"
                       -->
-                      <div class="absolute right-0 z-10 mt-0.5 w-32 origin-top-right rounded-md bg-white py-2 ring-1 shadow-lg ring-gray-900/5 focus:outline-hidden" role="menu" aria-orientation="vertical" aria-labelledby="options-menu-1-button" tabindex="-1">
+                      <div class="absolute right-0 z-10 mt-0.5 w-32 origin-top-right rounded-md bg-white py-2 ring-1 shadow-lg ring-gray-900/5 focus:outline-hidden hidden" role="menu" aria-orientation="vertical" aria-labelledby="options-menu-1-button" tabindex="-1">
                         <!-- Active: "bg-gray-50 outline-hidden", Not Active: "" -->
                         <a href="#" class="block px-3 py-1 text-sm/6 text-gray-900" role="menuitem" tabindex="-1" id="options-menu-1-item-0">View<span class="sr-only">, SavvyCal</span></a>
                         <a href="#" class="block px-3 py-1 text-sm/6 text-gray-900" role="menuitem" tabindex="-1" id="options-menu-1-item-1">Edit<span class="sr-only">, SavvyCal</span></a>
@@ -381,7 +381,7 @@
                           From: "transform opacity-100 scale-100"
                           To: "transform opacity-0 scale-95"
                       -->
-                      <div class="absolute right-0 z-10 mt-0.5 w-32 origin-top-right rounded-md bg-white py-2 ring-1 shadow-lg ring-gray-900/5 focus:outline-hidden" role="menu" aria-orientation="vertical" aria-labelledby="options-menu-2-button" tabindex="-1">
+                      <div class="absolute hidden right-0 z-10 mt-0.5 w-32 origin-top-right rounded-md bg-white py-2 ring-1 shadow-lg ring-gray-900/5 focus:outline-hidden" role="menu" aria-orientation="vertical" aria-labelledby="options-menu-2-button" tabindex="-1">
                         <!-- Active: "bg-gray-50 outline-hidden", Not Active: "" -->
                         <a href="#" class="block px-3 py-1 text-sm/6 text-gray-900" role="menuitem" tabindex="-1" id="options-menu-2-item-0">View<span class="sr-only">, Reform</span></a>
                         <a href="#" class="block px-3 py-1 text-sm/6 text-gray-900" role="menuitem" tabindex="-1" id="options-menu-2-item-1">Edit<span class="sr-only">, Reform</span></a>

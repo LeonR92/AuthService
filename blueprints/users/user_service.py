@@ -27,6 +27,23 @@ class UserService:
         user_id = self.user_repo.get_userid_by_email(email=email)
 
         return user_id[0] if user_id else None 
+    
+    def get_username_by_userid(self, user_id: int) -> str:
+        """Fetches the user's full name by user ID."""
+        if not user_id:
+            raise ValueError("User ID must be provided.")
+
+        full_name = self.user_repo.get_username_by_userid(user_id=user_id)
+        
+        if not full_name:
+            raise ValueError(f"User with ID {user_id} not found.")
+
+        first_name, last_name = full_name
+        if not first_name or not last_name:
+            raise ValueError(f"Incomplete name data for user ID {user_id}.")
+
+        return f"{first_name} {last_name}"
+
 
     def get_all_users(self):
         """Fetch a user by ID and raise an error if not found."""

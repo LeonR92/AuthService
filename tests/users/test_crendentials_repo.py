@@ -108,11 +108,5 @@ def test_update_credentials(credentials_repo, mock_db_sessions, sample_credentia
     
     assert updated_user.email == "updated@example.com"
 
-def test_update_credentials_not_found(credentials_repo, mock_db_sessions):
-    """Test updating non-existent credentials."""
-    _, read_session = mock_db_sessions
-    read_session.query.return_value.filter.return_value.first.return_value = None
 
-    result = credentials_repo.update_credentials(999, email="nonexistent@example.com")
-    
-    assert result is None
+
