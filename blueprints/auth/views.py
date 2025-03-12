@@ -1,6 +1,7 @@
 from flask import Blueprint, jsonify, redirect, request, session, url_for
 from blueprints.users.mfa_repository import MFARepository
 from blueprints.users.mfa_service import MFAservice
+import logging
 
 
 from core.database import get_read_db, get_write_db
@@ -22,7 +23,11 @@ def authenticate_login():
     data = request.form
     email = data.get("email")
     password = data.get("password")
-
+    honeypot = request.form.get("honeypot")
+    if honeypot:
+            logging.warning("Honeypot triggered: Possible bot detected.")
+            return "", 204
+    
     if not email or not password:
         return jsonify({"error": "Email and password are required"}), 400
     
