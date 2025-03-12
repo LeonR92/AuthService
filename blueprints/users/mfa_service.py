@@ -16,8 +16,7 @@ class MFAservice:
         if not user_id:
             raise ValueError("User id missing")
         mfa_details = self.mfa_repo.get_mfa_details_by_user_id(user_id)
-        if not mfa_details:
-            raise Exception("No MFA details with the user id is found")
+
         return mfa_details
     
     def get_user_details_by_mfa_id(self,email:str):
@@ -100,7 +99,10 @@ class MFAservice:
         totp = pyotp.TOTP(secret_key)
         return totp.verify(token)
     
-    def delete_mfa(self,mfa_id:int) -> None:
-        self.mfa_repo.delete(mfa_id=mfa_id)
+    def deactivate_mfa(self,user_id:int) -> None:
+        mfa_details = self.get_mfa_details_via_user_id(user_id=user_id)
+        if not mfa_details:
+            raise ValueError("No MFA details found")
+        self.mfa_repo.delete(mfa_id=mfa_details.id)
 
 

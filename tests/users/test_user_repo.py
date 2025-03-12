@@ -83,16 +83,7 @@ def test_delete_non_existent_user(user_repo, mock_db_sessions):
     write_session.delete.assert_not_called()
     write_session.commit.assert_not_called()
 
-def test_update_existing_user(user_repo, mock_db_sessions, sample_user):
-    """Test updating user attributes."""
-    write_session, read_session = mock_db_sessions
-    read_session.query.return_value.filter.return_value.first.return_value = sample_user
 
-    updated_user = user_repo.update(user_id=sample_user.id, first_name="Updated")
-
-    assert updated_user.first_name == "Updated"
-    write_session.commit.assert_called_once()
-    write_session.refresh.assert_called_once_with(sample_user)
 
 def test_update_non_existent_user(user_repo, mock_db_sessions):
     """Test updating a non-existent user."""

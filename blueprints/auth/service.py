@@ -15,9 +15,6 @@ class AuthService():
     def verify_password(self, email: str, password: str) -> bool:
         """Verifies a user's password against stored credentials."""
         cred = self.cred_service.get_credentials_via_email(email=email)
-        # TODO add MFA flow redirection and qr_code
-        # Save to session
-        # Password expiry
         if not cred or not cred.password:
             raise ValueError("Invalid email or password")
 
@@ -33,14 +30,3 @@ class AuthService():
         self.cred_service.update(cred.id, password=hashed_password)
 
         return new_password
-
-
-    def verify_mfa():
-        pass
-
-
-    def resend_mfa_seed():
-        pass
-
-    def create_mfa_seed():
-        pass

@@ -40,12 +40,12 @@ def get_user():
         users = user_service.get_all_users()
         return jsonify([{k: v for k, v in user.__dict__.items() if not k.startswith("_")} for user in users])
 
-@users.route("/show_qr_code/<int:user_id>")
-def show_qrcode(user_id: int):
+@users.route("/show_qr_code")
+def show_qrcode():
     """Display QR code for MFA setup for both new and existing users"""
     with get_write_db() as write_db, get_read_db() as read_db:
+        user_id = session.get("user_id")
         user_service = create_user_service(write_db=write_db, read_db=read_db)
-        
         user = user_service.get_user_by_id(user_id)
         if not user:
             abort(404)
@@ -60,16 +60,47 @@ def show_qrcode(user_id: int):
             user_id=user_id,
             name=name
         )
+@users.route("/activate_mfa")
+def activate_mfa():
+    """Display QR code for MFA setup for both new and existing users"""
+    with get_write_db() as write_db, get_read_db() as read_db:
+        user_id = session.get("user_id")
+        user_service = create_user_service(write_db=write_db, read_db=read_db)
+        user = user_service.get_user_by_id(user_id)
+        if not user:
+            abort(404)
+            
+        name = f"{user.last_name} {user.first_name}"
+        mfa_service = create_mfa_service(write_db=write_db, read_db=read_db)
+        user_service.activate_mfa(user_id)
+        qr_data = mfa_service.create_qrcode_totp(name=name, user_id=user_id)
+        
+        return render_template(
+            'users_qrcode.html',
+            qr_code=qr_data['qr_code_base64'],
+            user_id=user_id,
+            name=name
+        )
 @users.route("/logout", methods=["POST"])
 def logout():
     session.clear()
     return redirect(url_for("users.login"))
 
+@users.route("/deactivate_mfa", methods=["POST"])
+def deactivate_mfa():
+    with get_write_db() as write_db, get_read_db() as read_db:
+        user_id = session.get("user_id")
+        mfa_service = create_mfa_service(write_db=write_db,read_db=read_db)
+        mfa_service.deactivate_mfa(user_id=user_id)
+        return redirect(url_for("users.login"))
 
 @users.route("/mfa_input")
 def mfa_input():
-    user_id = session.get("user_id") 
-    return render_template("users_otp_input.html", user_id = user_id)
+    return render_template("users_otp_input.html")
+
+@users.route("/forgot_password")
+def forgot_password():
+    return "In Prod, the new randomly generated password will be sent via email"
 
 @users.route("reset_password", methods=["POST"])
 def reset_password():

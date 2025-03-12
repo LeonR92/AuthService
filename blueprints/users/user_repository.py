@@ -67,7 +67,8 @@ class UserRepository:
 
         for key, value in kwargs.items():
             setattr(user, key, value)
-
+            
+        user = self.write_db_session.merge(user)
         self.write_db_session.commit()
         self.write_db_session.refresh(user) 
         
