@@ -71,6 +71,7 @@ def activate_mfa():
             
         name = f"{user.last_name} {user.first_name}"
         mfa_service = create_mfa_service(write_db=write_db, read_db=read_db)
+        user_service.activate_mfa(user_id)
         qr_data = mfa_service.create_qrcode_totp(name=name, user_id=user_id)
         
         return render_template(

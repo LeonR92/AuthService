@@ -83,6 +83,14 @@ class UserService:
             raise RuntimeError("Error creating user")
         return user_id
 
+    def activate_mfa(self, user_id: int) -> None:
+        """Activates MFA for the user by creating an MFA entry if not present."""
+        
+        mfa_details = self.mfa_service.get_mfa_details_via_user_id(user_id=user_id)
+        
+        if not mfa_details or not mfa_details.id: 
+            mfa_id = self.mfa_service.create_mfa_entry()  
+            self.user_repo.update(user_id=user_id, mfa_id=mfa_id)  
 
     
     def update_user(self,user_id:int,**kwargs):

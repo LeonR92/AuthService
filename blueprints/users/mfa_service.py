@@ -16,8 +16,7 @@ class MFAservice:
         if not user_id:
             raise ValueError("User id missing")
         mfa_details = self.mfa_repo.get_mfa_details_by_user_id(user_id)
-        if not mfa_details:
-            raise Exception("No MFA details with the user id is found")
+
         return mfa_details
     
     def get_user_details_by_mfa_id(self,email:str):
