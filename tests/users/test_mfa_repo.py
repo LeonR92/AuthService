@@ -1,6 +1,5 @@
 import pytest
-from unittest.mock import Mock, patch, MagicMock
-from typing import Optional
+from unittest.mock import Mock, patch
 from sqlalchemy.orm import Session
 
 from blueprints.users.models import MFA, Credentials, User

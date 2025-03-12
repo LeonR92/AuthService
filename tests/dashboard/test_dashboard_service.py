@@ -1,5 +1,5 @@
 import pytest
-from unittest.mock import MagicMock, patch
+from unittest.mock import MagicMock
 from blueprints.users.mfa_service import MFAservice
 from blueprints.users.user_service import UserService
 from blueprints.dashboard.service import DashboardService  # Adjust import path as needed

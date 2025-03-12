@@ -1,7 +1,6 @@
 import pytest
-from unittest.mock import Mock, create_autospec, patch, MagicMock
-from sqlalchemy.orm import Session, Query
-from typing import List, Optional
+from unittest.mock import Mock, create_autospec
+from sqlalchemy.orm import Session
 
 from blueprints.users.models import User, Credentials
 from blueprints.users.user_repository import UserRepository

@@ -1,9 +1,5 @@
 import pytest
 from unittest.mock import Mock, patch
-import io
-import base64
-import pyotp
-import qrcode
 from blueprints.users.mfa_repository import MFARepository
 from blueprints.users.models import MFA
 

@@ -1,10 +1,9 @@
 import pytest
 from datetime import datetime
-from unittest.mock import Mock, patch, MagicMock
-from typing import List, Optional
+from unittest.mock import Mock, patch
 from sqlalchemy.orm import Session
 
-from blueprints.users.models import Credentials, User
+from blueprints.users.models import Credentials
 from blueprints.users.credentials_repository import CredentialsRepository  
 
 

@@ -1,7 +1,10 @@
 from flask import Blueprint, jsonify, redirect, request, session, url_for
+from flask_limiter import Limiter
+from flask_limiter.util import get_remote_address
 from blueprints.users.mfa_repository import MFARepository
 from blueprints.users.mfa_service import MFAservice
-
+import logging
+import redis
 
 from core.database import get_read_db, get_write_db
 from core.di import create_auth_service, create_mfa_service, create_user_service
@@ -14,15 +17,29 @@ auth = Blueprint(
     url_prefix="/auth"       
 )
 
+redis_client = redis.Redis(host='redis', port=6379, db=0)  
+
+limiter = Limiter(
+    get_remote_address,
+    storage_uri="redis://redis:6379/0",  
+    strategy="fixed-window" 
+)
+
+limiter.init_app(auth)
+
 @auth.route("/authenticate", methods=["POST"])
+@limiter.limit("5 per minute") 
 def authenticate_login():
     """Authenticate user and handle MFA if enabled"""
     
-    # Extract request data safely
     data = request.form
     email = data.get("email")
     password = data.get("password")
-
+    honeypot = request.form.get("honeypot")
+    if honeypot:
+            logging.warning("Honeypot triggered: Possible bot detected.")
+            return "", 204
+    
     if not email or not password:
         return jsonify({"error": "Email and password are required"}), 400
     
@@ -47,6 +64,7 @@ def authenticate_login():
 
 
 @auth.route("/verify_otp", methods=["POST"])
+@limiter.limit("10 per 5 minutes") 
 def verify_otp():
     """Verify OTP code for MFA authentication"""
     if not session.get("is_authenticated"):

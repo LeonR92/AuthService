@@ -1,7 +1,7 @@
 import pytest
 from datetime import datetime
 from sqlalchemy import create_engine
-from sqlalchemy.orm import Session, sessionmaker
+from sqlalchemy.orm import sessionmaker
 
 from core.database import Base
 from blueprints.users.models import User, Credentials, MFA
@@ -178,7 +178,7 @@ def test_user_delete_orphans_cascade(db_session):
     db_session.commit()
     
     # Store IDs
-    user_id = user.id
+
     mfa_id = mfa.id
     
     # Delete user

@@ -1,7 +1,6 @@
 import pytest
-from unittest.mock import Mock, patch, MagicMock
+from unittest.mock import Mock, patch
 import bcrypt
-from typing import List, Optional
 
 from blueprints.users.credentials_repository import CredentialsRepository
 from blueprints.users.models import Credentials
