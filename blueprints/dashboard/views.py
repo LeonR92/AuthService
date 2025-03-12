@@ -22,7 +22,7 @@ def test_dashboard():
 @dashboard.route("/welcome/")
 def user_dashboard():
     user_id = session.get("user_id")
-    with get_write_db() as write_db, get_read_db as read_db:
+    with get_write_db() as write_db, get_read_db() as read_db:
         dashboard_service = create_dashboard_service(write_db=write_db, read_db=read_db)
         username = dashboard_service.get_username_by_userid(user_id=user_id)
         return render_template("dashboard_user.html",username=username)

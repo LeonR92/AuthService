@@ -22,7 +22,7 @@ class UserRepository:
     
     def get_username_by_userid(self, user_id: int) -> Optional[tuple[str, str]]:
             """Fetches first and last name from the database."""
-            return (self.db_session.query(User.first_name, User.last_name)
+            return (self.read_db_session.query(User.first_name, User.last_name)
                     .filter(User.id == user_id)
                     .first())
     
