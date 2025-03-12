@@ -40,7 +40,8 @@ def create_auth_service(write_db, read_db) -> AuthService:
 
 def create_dashboard_service(write_db,read_db) -> DashboardService:
     user_service = create_user_service(write_db=write_db,read_db=read_db)
-    return DashboardService(user_service=user_service)
+    mfa_service = create_mfa_service(write_db=write_db,read_db=read_db)
+    return DashboardService(user_service=user_service,mfa_service=mfa_service)
 
 # Helper functions to initialize repositories
 def create_user_repository(write_db, read_db) -> UserRepository:

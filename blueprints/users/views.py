@@ -86,6 +86,13 @@ def logout():
     session.clear()
     return redirect(url_for("users.login"))
 
+@users.route("/deactivate_mfa", methods=["POST"])
+def deactivate_mfa():
+    with get_write_db() as write_db, get_read_db() as read_db:
+        user_id = session.get("user_id")
+        mfa_service = create_mfa_service(write_db=write_db,read_db=read_db)
+        mfa_service.deactivate_mfa(user_id=user_id)
+        return redirect(url_for("users.login"))
 
 @users.route("/mfa_input")
 def mfa_input():
