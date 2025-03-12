@@ -60,6 +60,10 @@ def show_qrcode(user_id: int):
             user_id=user_id,
             name=name
         )
+@users.route("/logout", methods=["POST"])
+def logout():
+    session.clear()
+    return redirect(url_for("users.login"))
 
 
 @users.route("/mfa_input")
@@ -74,6 +78,8 @@ def reset_password():
         user_id = session.get("user_id")
         email = cred_service.get_email_by_userid(user_id)
         new_password = cred_service.reset_password(email=email)
+        session.clear()
+
         return f"{new_password} is your new password in the demo session. In prod, it will be sent to your email."
 
     

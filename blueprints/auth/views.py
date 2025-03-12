@@ -76,7 +76,3 @@ def verify_otp():
             return jsonify({"error": "Invalid OTP code"}), 401
 
 
-@auth.route("/logout", methods=["POST"])
-def logout():
-    session.clear()
-    return redirect(url_for("users.login"))
