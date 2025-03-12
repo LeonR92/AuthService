@@ -60,13 +60,18 @@ class CredentialsRepository:
             user.deleted_at = datetime.now()
         return user
 
-    def update_credentials(self, cred_id: int, **kwargs) -> Optional[User]:
-        """Update user fields (Write Operation)."""
-        cred = self.get_credentials_by_id(cred_id)
-        if cred:
-            for key, value in kwargs.items():
-                setattr(cred, key, value)
-            return cred
+    def update_credentials(self, cred_id: int, **kwargs):
+        cred = self.read_db_session.query(Credentials).filter_by(id=cred_id).first()
+        
+        if not cred:
+            return None
+
+        cred = self.write_db_session.merge(cred)
+
+        for key, value in kwargs.items():
+            setattr(cred, key, value)
+
         self.write_db_session.commit()
         self.write_db_session.refresh(cred)
-        return None
+
+        return cred

@@ -73,7 +73,6 @@ def reset_password():
         cred_service = create_credentials_service(write_db=write_db, read_db=read_db)
         user_id = session.get("user_id")
         email = cred_service.get_email_by_userid(user_id)
-        print(email)
         new_password = cred_service.reset_password(email=email)
         return f"{new_password} is your new password in the demo session. In prod, it will be sent to your email."
 
