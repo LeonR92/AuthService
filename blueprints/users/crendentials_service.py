@@ -1,3 +1,5 @@
+import random
+import string
 from typing import List, Optional
 from blueprints.users.credentials_repository import CredentialsRepository
 import bcrypt
@@ -32,7 +34,21 @@ class CredentialsService:
             raise Exception ("credentials not found")
         return cred.id
     
+    def generate_random_password(self,length:int = 12) -> str:
+        """Generate a random password."""
+        characters = string.ascii_letters + string.digits + string.punctuation
+        random_password = ''.join(random.choice(characters) for _ in range(length))
+        return random_password
     
+    def reset_password(self,email:str) -> str:
+        credentials = self.get_credentials_via_email(email=email)
+        if not credentials:
+            raise ValueError(f"No credentials found for email: {email}")
+        new_password= self.generate_random_password()
+        new_hashed_password = self.validate_and_hash_pw(new_password)
+        self.cred_repo.update_credentials(new_hashed_password,cred_id=credentials.id)
+        return new_password
+
 
     def create_credentials(self, email: str, password: str) -> int:
         """Registers a new user."""
