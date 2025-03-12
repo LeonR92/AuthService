@@ -90,10 +90,12 @@ def change_password_form():
 @users.route("/change_password", methods=["POST"])
 def change_password():
     user_id = session.get("user_id") 
-    old_password = request.form.get("old_pw")
-    new_password = request.form.get("newspassword")
-    confirm_new_pw = request.form.get("confirmpassword")
-    return render_template("users_otp_input.html", user_id = user_id)
+    with get_write_db() as write_db, get_read_db() as read_db:
+        cred_service = create_credentials_service(write_db=write_db,read_db=read_db)
+        new_password = request.form.get("newpassword")
+        confirm_new_password = request.form.get("confirmpassword")
+        cred_service.change_password(user_id=user_id,new_password=new_password,confirm_new_password=confirm_new_password)
+        return redirect(url_for('dashboard.user_dashboard'))
 
 
     

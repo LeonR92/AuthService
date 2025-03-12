@@ -7,7 +7,7 @@ class AuthService():
     def __init__(self,cred_service:CredentialsService) -> None:
         self.cred_service = cred_service
 
-    def _check_password(self, plain_password: str, hashed_password: str) -> bool:
+    def check_password(self, plain_password: str, hashed_password: str) -> bool:
         """Checks if the provided password matches the stored hashed password."""
         return bcrypt.checkpw(plain_password.encode("utf-8"), hashed_password.encode("utf-8"))
     
@@ -21,7 +21,7 @@ class AuthService():
         if not cred or not cred.password:
             raise ValueError("Invalid email or password")
 
-        return self._check_password(password, cred.password)
+        return self.check_password(password, cred.password)
     
     def reset_password(self, email: str, new_password:int) -> str:
         """Resets the password and returns the new one."""
