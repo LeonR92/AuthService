@@ -1,8 +1,9 @@
 from flask import Blueprint, jsonify, redirect, request, session, url_for
+from flask_limiter import Limiter
 from blueprints.users.mfa_repository import MFARepository
 from blueprints.users.mfa_service import MFAservice
 import logging
-
+import redis
 
 from core.database import get_read_db, get_write_db
 from core.di import create_auth_service, create_mfa_service, create_user_service
@@ -14,6 +15,18 @@ auth = Blueprint(
     static_folder="static" ,
     url_prefix="/auth"       
 )
+
+redis_client = redis.Redis(host='redis', port=6379, db=0)  
+
+# Initialize Flask-Limiter with Redis
+limiter = Limiter(
+    get_remote_address,
+    storage_uri="redis://redis:6379/0",  
+    strategy="fixed-window" 
+)
+
+# Attach limiter to the Blueprint
+limiter.init_app(auth)
 
 @auth.route("/authenticate", methods=["POST"])
 def authenticate_login():

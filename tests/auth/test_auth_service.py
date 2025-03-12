@@ -1,6 +1,6 @@
 import pytest
 import bcrypt
-from unittest.mock import MagicMock, patch
+from unittest.mock import MagicMock
 from blueprints.users.crendentials_service import CredentialsService
 from blueprints.auth.service import AuthService  
 
