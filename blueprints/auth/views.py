@@ -74,3 +74,9 @@ def verify_otp():
             return redirect(url_for('dashboard.user_dashboard'))
         except ValueError:
             return jsonify({"error": "Invalid OTP code"}), 401
+
+
+@auth.route("/logout", methods=["POST"])
+def logout():
+    session.clear()
+    return redirect(url_for("users.login"))
