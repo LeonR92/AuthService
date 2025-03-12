@@ -1,5 +1,5 @@
 from flask import Blueprint, abort, redirect, render_template, request, jsonify, session, url_for
-from core.di import create_auth_service, create_credentials_service, create_mfa_service, create_user_service
+from core.di import create_credentials_service, create_mfa_service, create_user_service
 
 from core.database import get_read_db,get_write_db
 
@@ -81,5 +81,21 @@ def reset_password():
         session.clear()
 
         return f"{new_password} is your new password in the demo session. In prod, it will be sent to your email."
+
+@users.route("/change_password", methods=["GET"])
+def change_password_form():
+    return render_template("users_changepw.html")
+
+
+@users.route("/change_password", methods=["POST"])
+def change_password():
+    user_id = session.get("user_id") 
+    with get_write_db() as write_db, get_read_db() as read_db:
+        cred_service = create_credentials_service(write_db=write_db,read_db=read_db)
+        new_password = request.form.get("newpassword")
+        confirm_new_password = request.form.get("confirmpassword")
+        cred_service.change_password(user_id=user_id,new_password=new_password,confirm_new_password=confirm_new_password)
+        return redirect(url_for('dashboard.user_dashboard'))
+
 
     
