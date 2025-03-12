@@ -44,6 +44,7 @@ class MFARepository():
     def delete(self,mfa_id:int)->None:
         mfa = self.get_mfa_details(mfa_id)
         if mfa:
+            mfa = self.write_db_session.merge(mfa)
             self.write_db_session.delete(mfa)
             self.write_db_session.commit()
     

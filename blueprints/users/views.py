@@ -98,6 +98,10 @@ def deactivate_mfa():
 def mfa_input():
     return render_template("users_otp_input.html")
 
+@users.route("/forgot_password")
+def forgot_password():
+    return "In Prod, the new randomly generated password will be sent via email"
+
 @users.route("reset_password", methods=["POST"])
 def reset_password():
     with get_write_db() as write_db, get_read_db() as read_db:

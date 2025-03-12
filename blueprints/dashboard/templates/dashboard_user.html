@@ -20,7 +20,18 @@
             <p>Welcome {{username}},</p>
           </div>
           <nav class="hidden md:flex md:gap-x-11 md:text-sm/6 md:font-semibold md:text-gray-700">
-            <a href="{{url_for('users.activate_mfa')}}">Activate MFA</a>
+            {% if mfa_enabled %}
+              <form action="{{ url_for('users.deactivate_mfa') }}" method="POST">
+                  <button type="submit" class="font-medium text-red-500 hover:text-red-600">
+                      Deactivate MFA
+                  </button>
+              </form>
+          {% else %}
+              <a href="{{ url_for('users.activate_mfa') }}" class="font-medium text-indigo-500 hover:text-indigo-600">
+                  Activate MFA
+              </a>
+          {% endif %}
+
             <a href="{{url_for('users.change_password_form')}}">Change password</a>
             <form action="{{ url_for('users.reset_password') }}" method="post">
               <button type="submit">Reset password</button>
@@ -51,10 +62,16 @@
             </div>
             <div class="mt-2 space-y-2">
               {% if mfa_enabled %}
-              <a href="{{url_for('users.deactivate_mfa')}}">Deactivate MFA</a>
-              {% else %}
-              <a href="{{url_for('users.activate_mfa')}}">Activate MFA</a>
-              {% endif %}
+                <form action="{{ url_for('users.deactivate_mfa') }}" method="POST">
+                    <button type="submit" class="font-medium text-red-500 hover:text-red-600">
+                        Deactivate MFA
+                    </button>
+                </form>
+            {% else %}
+                <a href="{{ url_for('users.activate_mfa') }}" class="font-medium text-indigo-500 hover:text-indigo-600">
+                    Activate MFA
+                </a>
+            {% endif %}
               <a href="{{url_for('users.change_password_form')}}">Change password</a>
               <form action="{{ url_for('users.reset_password') }}" method="post">
                 <button type="submit">Reset password</button>
