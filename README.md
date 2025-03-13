@@ -90,7 +90,7 @@ This authentication service implements a robust, scalable architecture using:
 
 ```bash
 # Clone the repository
-git clone https://github.com/LeonR92/BookStore.git
+git clone https://github.com/LeonR92/AuthService.git
 cd BookStore
 
 # Start the services
