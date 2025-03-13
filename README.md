@@ -103,7 +103,8 @@ Visit `http://localhost:3000` to access the Grafana dashboard.
 ## Screenshots
 
 ### Login Page with MFA Option
-![Login Screenshot](login-screenshot.png)
+![Login Screenshot](login.jpeg)
+![Registration Screenshot](registration.jpeg)
 
 ### User Dashboard
 ![Dashboard Screenshot](dashboard-screenshot.png)
