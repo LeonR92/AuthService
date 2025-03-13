@@ -1,3 +1,5 @@
+# Scalable Authentication Service
+
 [![CI](https://github.com/LeonR92/BookStore/actions/workflows/ci.yml/badge.svg)](https://github.com/LeonR92/BookStore/actions/workflows/ci.yml)
 ![Ruff](https://img.shields.io/badge/code%20style-ruff-000000.svg)
 ![Python](https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white)
@@ -7,13 +9,10 @@
 ![Grafana](https://img.shields.io/badge/Grafana-F46800?style=for-the-badge&logo=grafana&logoColor=white)
 ![Prometheus](https://img.shields.io/badge/Prometheus-E6522C?style=for-the-badge&logo=prometheus&logoColor=white)
 
-
-
-# Scalable Authentication Service
-
 A production-ready authentication service demonstrating enterprise-level architecture and security practices.
 
 ## Architecture Overview
+![Architecture Diagram](diagram-export-13-03-2025-20_40_56.png)
 
 This authentication service implements a robust, scalable architecture using:
 
@@ -59,12 +58,12 @@ This authentication service implements a robust, scalable architecture using:
   - Optimized initialization sequence
   - Network isolation between service layers
 
-## Obervability
-  - Native flask loggin before each request
-  - Prometheus in /metrics
-  - Grafana in localhost:3000
+## Observability
+- Native Flask logging before each request
+- Prometheus metrics exposed at `/metrics`
+- Grafana dashboard available at `localhost:3000`
+
 ## Getting Started
-![Architecture Diagram](diagram-export-13-03-2025-20_40_56.png)
 
 ```bash
 # Clone the repository
@@ -77,8 +76,6 @@ docker-compose up --build
 
 Visit `http://localhost:80` to access the authentication dashboard.
 Visit `http://localhost:3000` to access the Grafana dashboard.
-
-
 
 ## License
 
