@@ -1,13 +1,13 @@
 version: "3.8"
 
 services:
-  app:
+  app: # Python flask app
     image: python:3.11
     container_name: my_python_app
     working_dir: /app
     volumes:
       - .:/app
-    environment:
+    environment: # In Prod, these will be managed in docker-compose secrets
       - PYTHONUNBUFFERED=1
       - WRITE_DATABASE_URL=postgresql://user:password@postgres-primary:5432/mydb
       - READ_DATABASE_URL=postgresql://user:password@pgbouncer:6432/mydb
@@ -15,7 +15,7 @@ services:
       - SECRET_KEY=asd7612..asdkaksd@!^%asd
     expose:
       - "8080"
-    depends_on:
+    depends_on: # DBs run first
       - postgres-primary
       - postgres-replica-1
       - postgres-replica-2
@@ -25,19 +25,19 @@ services:
       - redis
     command: >
       sh -c "pip install uv && uv pip install --system --requirements pyproject.toml && python -m core.init_db || { echo 'Database initialization failed'; exit 1; } && gunicorn -w 4 -b 0.0.0.0:8080 app:app"
-    networks:
+    networks: # Pythoon sits between nginx and db
       - frontend
       - backend
 
-  postgres-primary:
+  postgres-primary: # Write DB
     image: postgres:15
     container_name: postgres-primary
     restart: always
-    environment:
+    environment: # In prod, this will be handled in docker compose secrets
       POSTGRES_USER: user
       POSTGRES_PASSWORD: password
       POSTGRES_DB: mydb
-    expose:
+    expose: # no port mapping
       - "5432"
     volumes:
       - pg_primary_data:/var/lib/postgresql/data
@@ -55,7 +55,7 @@ services:
         exec postgres
       "
     user: postgres
-    healthcheck:
+    healthcheck: # Important since this is the only master db
       test: ["CMD-SHELL", "pg_isready -U user -d mydb"]
       interval: 10s
       timeout: 5s
@@ -63,7 +63,7 @@ services:
     networks:
       - backend
 
-  postgres-replica-1:
+  postgres-replica-1: # Replicas
     image: postgres:15
     container_name: postgres-replica-1
     restart: always
@@ -73,7 +73,7 @@ services:
       POSTGRES_DB: mydb
     expose:
       - "5432"
-    depends_on:
+    depends_on: # depends on write db for replication
       postgres-primary:
         condition: service_healthy
     volumes:
@@ -95,7 +95,7 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
-    networks:
+    networks: # backend only
       - backend
 
   postgres-replica-2:
@@ -168,7 +168,7 @@ services:
     networks:
       - backend
 
-  pgbouncer:
+  pgbouncer: # Connection pooling
     image: edoburu/pgbouncer:1.18.0
     container_name: pgbouncer
     restart: always
@@ -182,7 +182,7 @@ services:
     networks:
       - backend
 
-  haproxy:
+  haproxy: # Load balancer for the read db cluster
     image: haproxy:2.7
     container_name: haproxy
     restart: always
@@ -200,7 +200,7 @@ services:
     networks:
       - backend
 
-  redis:
+  redis: # redis
     image: redis:7
     container_name: redis
     restart: always
@@ -217,26 +217,68 @@ services:
     networks:
       - backend
     
-  nginx:
+  nginx: # Reverse proxy
     image: nginx:latest
     container_name: nginx
     restart: always
     ports:
-      - 80:80
+      - 80:80 # In prod, 443 will be exposed for HTTPS
     depends_on:
       - app
     volumes:
-      - .:/app
+      - .:/app # To serve Flask's static files
       - ./nginx.conf:/etc/nginx/nginx.conf:ro
     networks:
-      - frontend
+      - frontend # Frontend only
+    
+  prometheus: # Observability
+    image: prom/prometheus:latest
+    container_name: prometheus
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml:ro
+    command:
+      - --config.file=/etc/prometheus/prometheus.yml
+    ports:
+      - "9090:9090"
+    networks:
+      - backend
+  
+  postgres-exporter: # Postgres metrics
+    image: wrouesnel/postgres_exporter
+    container_name: postgres-exporter
+    restart: always
+    environment:
+      DATA_SOURCE_NAME: "postgresql://user:password@postgres-primary:5432/mydb?sslmode=disable"
+    ports:
+      - "9187:9187"
+    depends_on:
+      - postgres-primary
+    networks:
+      - backend
 
-volumes:
+  grafana: # For visualising Prometheus metrics
+    image: grafana/grafana:latest
+    container_name: grafana
+    restart: always
+    ports:
+      - "3000:3000"
+    depends_on:
+      - prometheus
+    volumes:
+      - grafana_data:/var/lib/grafana
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+    networks:
+      - backend
+
+
+volumes: # Persistence
   pg_primary_data:
   pg_replica_data_1:
   pg_replica_data_2:
   pg_replica_data_3:
   redis_data:
+  grafana_data:
 
 networks:
   frontend:

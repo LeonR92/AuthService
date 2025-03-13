@@ -9,8 +9,8 @@
   <body class="flex min-h-screen items-center justify-center bg-slate-50">
     <div class="mx-auto w-full max-w-md rounded-xl bg-white px-4 py-10 text-center shadow sm:px-8">
       <header class="mb-8">
-        <h1 class="mb-1 text-2xl font-bold">Mobile Phone Verification</h1>
-        <p class="text-[15px] text-slate-500">Enter the 6-digit verification code that was sent to your phone number.</p>
+        <h1 class="mb-1 text-2xl font-bold">OTP Verification</h1>
+        <p class="text-[15px] text-slate-500">Enter the 6-digit OTP in your Authenticator(Google or Microsoft).</p>
       </header>
       <form id="otp-form" action="{{url_for('auth.verify_otp')}}" method="POST">
         <input type="hidden" id="code" name="code" value="" />
