@@ -16,56 +16,54 @@ from flask_limiter.util import get_remote_address
 
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
-
-
-# Initialize Flask app
-app = Flask(__name__)
-Compress(app)
-init_redis(app)
 limiter = Limiter(
     key_func=get_remote_address,
     storage_uri="redis://redis:6379/0",
     strategy="fixed-window"
 )
-limiter.init_app(app)
-app.register_blueprint(users)
-app.register_blueprint(auth)
-app.register_blueprint(dashboard)
 
-load_dotenv()
-
-app.config["SECRET_KEY"] = os.getenv("SECRET_KEY")
-
-
-
-limiter.limit("10 per minute")(app.view_functions["auth.authenticate_login"])
-
-
-@app.before_request
-def log_request():
-    """Logs every request before it reaches a route."""
-    logging.info(f"Incoming request: {request.method} {request.path} - From: {request.remote_addr}")
-
-
-@app.before_request
-def require_login():
-    """Function to block access to the dashboard blueprint for unauthenticated users."""
-    # Check if the request is for a route under the dashboard blueprint
-    if request.endpoint and request.endpoint.startswith('dashboard'):
-        if not session.get("is_authenticated"):
-            return redirect(url_for('users.login'))
-
-
-
-
-
-@app.route("/")
-def get_users():
-    return "hi"
-
-# Run app
-if __name__ == "__main__":
-
+def create_app():
+    load_dotenv()
+    # Initialize Flask app
+    app = Flask(__name__)
+    Compress(app)
+    init_redis(app)
     init_db()
-    app.run(host="0.0.0.0", port=8080, debug=True)  
+
+    limiter.init_app(app)
+    app.register_blueprint(users)
+    app.register_blueprint(auth)
+    app.register_blueprint(dashboard)
+
+    
+
+    app.config["SECRET_KEY"] = os.getenv("SECRET_KEY")
+
+
+
+    limiter.limit("10 per minute")(app.view_functions["auth.authenticate_login"])
+
+
+    @app.before_request
+    def before_request():
+        """Middleware to log requests and enforce authentication for dashboard routes."""
+        
+        # Log request details
+        logging.info(f"Incoming request: {request.method} {request.path} - From: {request.remote_addr}")
+
+        # Restrict access to dashboard routes for unauthenticated users
+        if request.endpoint and request.endpoint.startswith('dashboard'):
+            if not session.get("is_authenticated"):
+                return redirect(url_for('users.login'))
+            
+    @app.route("/")
+    def index():
+        return redirect(url_for('users.login'))
+
+    return app
+
+
+    
+
+app = create_app()
 

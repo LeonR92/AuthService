@@ -20,7 +20,7 @@ services:
       - postgres-replica
       - redis
     command: >
-      sh -c "pip install uv && uv venv .venv && uv pip install --system --requirements pyproject.toml && python app.py"
+      sh -c "pip install uv && uv venv .venv && uv pip install --system --requirements pyproject.toml && python app.py && gunicorn -w 4 -b 0.0.0.0:8080 app:app"
 
   postgres-primary:
     image: postgres:15
