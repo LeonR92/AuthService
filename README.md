@@ -54,6 +54,9 @@ This authentication service implements a robust, scalable architecture using:
   - Optimized initialization sequence
   - Network isolation between service layers
 
+## Obervability
+  - Native flask loggin before each request
+  - Prometheus in /metrics
 ## Getting Started
 
 ```bash

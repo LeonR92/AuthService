@@ -2,7 +2,7 @@ import logging
 from flask import Flask, redirect, request, session, url_for
 from dotenv import load_dotenv
 import os
-
+from prometheus_flask_exporter import PrometheusMetrics
 from blueprints.users.views import users
 from blueprints.auth.views import auth
 from blueprints.dashboard.views import dashboard
@@ -42,7 +42,9 @@ def create_app():
 
 
     limiter.limit("10 per minute")(app.view_functions["auth.authenticate_login"])
-
+    metrics = PrometheusMetrics(app)
+    
+    metrics.info("flask_app_info", "Application info", version="1.0.0")
 
     @app.before_request
     def before_request():
@@ -50,7 +52,8 @@ def create_app():
         
         # Log request details
         logging.info(f"Incoming request: {request.method} {request.path} - From: {request.remote_addr}")
-
+        if request.endpoint in ["metrics", "static"]:
+            return
         # Restrict access to dashboard routes for unauthenticated users
         if request.endpoint and request.endpoint.startswith('dashboard'):
             if not session.get("is_authenticated"):
@@ -60,6 +63,10 @@ def create_app():
     def index():
         return redirect(url_for('users.login'))
 
+    @app.route("/metrics")
+    def metrics_endpoint():
+        """Prometheus endpoint to collect app metrics."""
+        return metrics.do_export()
     return app
 
 

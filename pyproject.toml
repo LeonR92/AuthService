@@ -14,6 +14,7 @@ dependencies = [
     "flask-session>=0.8.0",
     "gunicorn>=23.0.0",
     "pillow>=11.1.0",
+    "prometheus-flask-exporter>=0.23.2",
     "psycopg2>=2.9.10",
     "pyotp>=2.9.0",
     "python-dotenv>=1.0.1",

@@ -230,6 +230,47 @@ services:
       - ./nginx.conf:/etc/nginx/nginx.conf:ro
     networks:
       - frontend
+    
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: prometheus
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml:ro
+    command:
+      - --config.file=/etc/prometheus/prometheus.yml
+    ports:
+      - "9090:9090"
+    networks:
+      - backend
+  
+  postgres-exporter:
+    image: wrouesnel/postgres_exporter
+    container_name: postgres-exporter
+    restart: always
+    environment:
+      DATA_SOURCE_NAME: "postgresql://user:password@postgres-primary:5432/mydb?sslmode=disable"
+    ports:
+      - "9187:9187"
+    depends_on:
+      - postgres-primary
+    networks:
+      - backend
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: grafana
+    restart: always
+    ports:
+      - "3000:3000"
+    depends_on:
+      - prometheus
+    volumes:
+      - grafana_data:/var/lib/grafana
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+    networks:
+      - backend
+
 
 volumes:
   pg_primary_data:
@@ -237,6 +278,7 @@ volumes:
   pg_replica_data_2:
   pg_replica_data_3:
   redis_data:
+  grafana_data:
 
 networks:
   frontend:
