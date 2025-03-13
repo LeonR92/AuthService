@@ -15,6 +15,7 @@ This authentication service implements a robust, scalable architecture using:
 - **Database Layer**
   - PostgreSQL with 1 write replica and 3 read replicas
   - HAProxy for intelligent read query distribution
+  - PGBouncer for connection pooling
   - Repository pattern for clean data access abstraction
 
 - **Caching & Performance**
