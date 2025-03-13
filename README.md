@@ -64,7 +64,7 @@ cd auth-service
 docker-compose up
 ```
 
-Visit `http://localhost:8080` to access the authentication dashboard.
+Visit `http://localhost:80` to access the authentication dashboard.
 
 ## Testing
 
