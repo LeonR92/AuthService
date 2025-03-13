@@ -53,7 +53,7 @@ def authenticate_login():
     honeypot = request.form.get("honeypot")
     if honeypot:
             logging.warning("Honeypot triggered: Possible bot detected.")
-            return "", 204
+            return jsonify({"message": "Form submitted successfully"}), 204
     if not email or not password:
         return jsonify({"error": "Email and password are required"}), 400
     
@@ -77,9 +77,9 @@ def authenticate_login():
 
     # Redirect to MFA input page if MFA is enabled
     if mfa_enabled:
-        return redirect(url_for("users.mfa_input"))
+        return jsonify({"status": "success", "redirect": url_for("users.mfa_input")}), 200
 
-    return redirect(url_for('dashboard.user_dashboard'))
+    return jsonify({"status": "success", "redirect": url_for('dashboard.user_dashboard')}), 200
 
 
 @auth.route("/verify_otp", methods=["POST"])
@@ -93,7 +93,7 @@ def verify_otp():
 
     # Only logged in users can access this page
     if not session.get("is_authenticated"):
-        return redirect(url_for("users.login"))
+        return jsonify({"error": "Authentication required", "redirect": url_for("users.login")}), 401
     
     # HTML form data extraction and guard clause
     totp = request.form.get("code")
@@ -116,8 +116,6 @@ def verify_otp():
             # Verify OTP and save to session
             mfa_service.verify_totp(secret_key=mfa_details.totp_secret, token=totp)
             session["is_totp_authenticated"] = True
-            return redirect(url_for('dashboard.user_dashboard'))
+            return jsonify({"status": "success", "redirect": url_for('dashboard.user_dashboard')}), 200
         except ValueError:
             return jsonify({"error": "Invalid OTP code"}), 401
-
-
