@@ -13,14 +13,14 @@ services:
       - READ_DATABASE_URL=postgresql://user:password@postgres-replica:5432/mydb
       - REDIS_URL=redis://redis:6379/0
       - SECRET_KEY=asd7612..asdkaksd@!^%asd
-    ports:
-      - "8080:8080"
+    expose:
+      - "8080"
     depends_on:
       - postgres-primary
       - postgres-replica
       - redis
     command: >
-      sh -c "pip install uv && uv venv .venv && uv pip install --system --requirements pyproject.toml && python app.py && gunicorn -w 4 -b 0.0.0.0:8080 app:app"
+      sh -c "pip install uv && uv pip install --system --requirements pyproject.toml && gunicorn -w 4 -b 0.0.0.0:8080 app:app"
 
   postgres-primary:
     image: postgres:15
@@ -96,6 +96,18 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+    
+  nginx:
+    image: nginx:latest
+    container_name: nginx
+    restart: always
+    ports:
+      - 80:80
+    depends_on:
+      - app
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+
 
 volumes:
   pg_primary_data:
