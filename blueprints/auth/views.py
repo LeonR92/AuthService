@@ -63,7 +63,7 @@ def authenticate_login():
         auth_service = create_auth_service(read_db=read_db, write_db=write_db)
         # verify password against db
         if not auth_service.verify_password(email, password):
-            return jsonify({"error": "Authentication failed"}), 401
+            return jsonify({"error": "Authentication failed. Please check creds"}), 401
         
         # get MFA details to determine routing process
         mfa_service = create_mfa_service(read_db=read_db,write_db=write_db)
