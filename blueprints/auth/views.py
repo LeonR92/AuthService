@@ -88,9 +88,8 @@ def authenticate_login():
 
     # Redirect to MFA input page if MFA is enabled
     if mfa_enabled:
-        return jsonify({"status": "success", "redirect": url_for("users.mfa_input")}), 200
-
-    return jsonify({"status": "success", "redirect": url_for('dashboard.user_dashboard')}), 200
+        return redirect(url_for('users.mfa_input'))
+    return redirect(url_for('dashboard.user_dashboard'))
 
 
 @auth.route("/verify_otp", methods=["POST"])
@@ -127,6 +126,6 @@ def verify_otp():
             # Verify OTP and save to session
             mfa_service.verify_totp(secret_key=mfa_details.totp_secret, token=totp)
             session["is_totp_authenticated"] = True
-            return jsonify({"status": "success", "redirect": url_for('dashboard.user_dashboard')}), 200
+            return redirect(url_for('dashboard.user_dashboard'))
         except ValueError:
             return jsonify({"error": "Invalid OTP code"}), 401
