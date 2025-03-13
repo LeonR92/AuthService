@@ -2,7 +2,7 @@ version: "3.8"
 
 services:
   app:
-    image: python:3.11
+    image: python:3.11-slim
     container_name: my_python_app
     working_dir: /app
     volumes:
