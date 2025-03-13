@@ -47,6 +47,7 @@ jobs:
       - name: Run Ruff Linting
         run: |
           ruff format .
+          ruff check . --fix
 
       - name: Run Tests with Pytest
         env:
