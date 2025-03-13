@@ -13,7 +13,6 @@ from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
 
 
-init_db()
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
 limiter = Limiter(
@@ -28,6 +27,8 @@ def create_app():
     app = Flask(__name__)
     Compress(app)
     init_redis(app)
+    with app.app_context():
+        init_db()
     
 
     limiter.init_app(app)
