@@ -59,7 +59,8 @@ This authentication service implements a robust, scalable architecture using:
   - Prometheus in /metrics
   - Grafana in localhost:3000
 ## Getting Started
-diagram-export-13-03-2025-20_40_56.png
+![Architecture Diagram](diagram-export-13-03-2025-20_40_56.png)
+
 ```bash
 # Clone the repository
 git clone https://github.com/yourusername/auth-service.git
