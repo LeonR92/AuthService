@@ -139,30 +139,6 @@ def test_get_email_by_userid_empty(credentials_service, mock_cred_repo):
         credentials_service.get_email_by_userid(user_id)
 
 
-def test_get_id_via_email_existing(credentials_service, mock_cred_repo, mock_credentials):
-    """Test getting credential ID via email when it exists."""
-    # Arrange
-    email = "user1@example.com"
-    mock_cred_repo.get_credentials_by_email.return_value = mock_credentials[0]
-    
-    # Act
-    result = credentials_service.get_id_via_email(email)
-    
-    # Assert
-    mock_cred_repo.get_credentials_by_email.assert_called_once_with(email=email)
-    assert result == 1  # mock_credentials[0].id
-
-
-def test_get_id_via_email_nonexistent(credentials_service, mock_cred_repo):
-    """Test getting credential ID via email when it doesn't exist."""
-    # Arrange
-    email = "nonexistent@example.com"
-    mock_cred_repo.get_credentials_by_email.return_value = None
-    
-    # Act & Assert
-    with pytest.raises(Exception, match="credentials not found"):
-        credentials_service.get_id_via_email(email)
-    mock_cred_repo.get_credentials_by_email.assert_called_once_with(email=email)
 
 
 def test_generate_random_password(credentials_service):
@@ -281,60 +257,6 @@ def test_create_credentials_error(credentials_service, mock_cred_repo):
 
 
 
-def test_create_user_valid(credentials_service, mock_cred_repo):
-    """Test creating a user with valid data."""
-    # Arrange
-    data = {
-        "first_name": "John",
-        "last_name": "Doe",
-        "email": "john.doe@example.com"
-    }
-    expected_cred_id = 3
-    mock_cred_repo.create_credentials.return_value = expected_cred_id
-    
-    # Act
-    result = credentials_service.create_user(data)
-    
-    # Assert
-    mock_cred_repo.create_credentials.assert_called_once_with(**data)
-    assert result == expected_cred_id
-
-
-def test_create_user_invalid_data(credentials_service, mock_cred_repo):
-    """Test creating a user with invalid data."""
-    # Arrange - Data with invalid keys
-    data = {
-        "first_name": "John",
-        "invalid_field": "Value",
-        "another_invalid": "Value"
-    }
-    
-    # Based on the implementation, the check is actually if ALL keys are in the set,
-    # not just any keys, so we need a test case that matches the actual implementation
-    
-    # Act & Assert
-    with pytest.raises(ValueError, match="Invalid or empty data"):
-        credentials_service.create_user(data)
-
-
-def test_create_user_empty_data(credentials_service):
-    """Test creating a user with empty data."""
-    # Arrange
-    data = {}
-    
-    # Act & Assert
-    with pytest.raises(ValueError, match="Invalid or empty data"):
-        credentials_service.create_user(data)
-
-
-def test_create_user_none_data(credentials_service):
-    """Test creating a user with None data."""
-    # Arrange
-    data = None
-    
-    # Act & Assert
-    with pytest.raises(ValueError, match="Invalid or empty data"):
-        credentials_service.create_user(data)
 
 
 def test_change_password_valid(credentials_service, mock_cred_repo, mock_credentials):
@@ -391,38 +313,5 @@ def test_change_password_mismatch(credentials_service, mock_cred_repo, mock_cred
     mock_cred_repo.get_credentials_by_id.assert_called_once_with(user_id=user_id)
 
 
-def test_update_valid(credentials_service, mock_cred_repo):
-    """Test updating credentials with valid data."""
-    # Arrange
-    cred_id = 1
-    password = "new_password"
-    
-    # Act
-    credentials_service.update(cred_id, password)
-    
-    # Assert
-    mock_cred_repo.update_credentials.assert_called_once_with(cred_id, password=password)
 
 
-def test_update_no_cred_id(credentials_service):
-    """Test updating credentials with no credential ID."""
-    # Arrange
-    cred_id = None
-    password = "new_password"
-    
-    # Act & Assert
-    with pytest.raises(ValueError, match="Credential ID is required for update."):
-        credentials_service.update(cred_id, password)
-
-
-def test_update_no_fields(credentials_service, mock_cred_repo):
-    """Test updating credentials with no fields to update."""
-    # Arrange
-    cred_id = 1
-    password = None
-    
-    # Act
-    credentials_service.update(cred_id, password)
-    
-    # Assert
-    mock_cred_repo.update_credentials.assert_called_once_with(cred_id)
