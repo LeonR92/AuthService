@@ -12,6 +12,7 @@ services:
       - WRITE_DATABASE_URL=postgresql://user:password@postgres-primary:5432/mydb
       - READ_DATABASE_URL=postgresql://user:password@postgres-replica:5432/mydb
       - REDIS_URL=redis://redis:6379/0
+      - SECRET_KEY=asd7612..asdkaksd@!^%asd
     ports:
       - "8080:8080"
     depends_on:
