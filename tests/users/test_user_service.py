@@ -133,27 +133,6 @@ def test_get_username_by_userid_incomplete_data(user_service, mock_user_repo):
         user_service.get_username_by_userid(user_id)
 
 
-# Tests for get_all_users
-def test_get_all_users_success(user_service, mock_user_repo):
-    # Arrange
-    mock_users = [Mock(), Mock()]
-    mock_user_repo.get_all_users.return_value = mock_users
-    
-    # Act
-    result = user_service.get_all_users()
-    
-    # Assert
-    mock_user_repo.get_all_users.assert_called_once()
-    assert result == mock_users
-
-
-def test_get_all_users_none_found(user_service, mock_user_repo):
-    # Arrange
-    mock_user_repo.get_all_users.return_value = []
-    
-    # Act & Assert
-    with pytest.raises(ValueError, match="no user found"):
-        user_service.get_all_users()
 
 
 # Tests for get_full_user_details_by_id

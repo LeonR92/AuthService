@@ -141,21 +141,6 @@ def test_get_username_by_userid_not_found(user_repository, mock_read_session):
     assert result is None
 
 
-# Tests for get_all_users
-def test_get_all_users(user_repository, mock_read_session, sample_user):
-    # Arrange
-    mock_query = Mock()
-    mock_query.all.return_value = [sample_user]
-    mock_read_session.query.return_value = mock_query
-    
-    # Act
-    result = user_repository.get_all_users()
-    
-    # Assert
-    mock_read_session.query.assert_called_once_with(User)
-    mock_query.all.assert_called_once()
-    assert len(result) == 1
-    assert result[0] == sample_user
 
 
 # Tests for get_full_user_details_by_id

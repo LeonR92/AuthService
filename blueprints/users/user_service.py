@@ -45,12 +45,7 @@ class UserService:
         return f"{first_name} {last_name}"
 
 
-    def get_all_users(self):
-        """Fetch a user by ID and raise an error if not found."""
-        users = self.user_repo.get_all_users()
-        if not users:
-            raise ValueError("no user found")
-        return users
+
 
     def get_full_user_details_by_id(self, user_id: int):
         """Fetch a user by ID and raise an error if not found."""

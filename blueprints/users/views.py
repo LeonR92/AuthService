@@ -33,12 +33,6 @@ def create_user():
 
 
 
-@users.route("/get_users")
-def get_user():
-     with get_write_db() as write_db, get_read_db() as read_db:
-        user_service = create_user_service(write_db=write_db, read_db=read_db)
-        users = user_service.get_all_users()
-        return jsonify([{k: v for k, v in user.__dict__.items() if not k.startswith("_")} for user in users])
 
 @users.route("/show_qr_code")
 def show_qrcode():
