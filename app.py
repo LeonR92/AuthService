@@ -27,8 +27,7 @@ def create_app():
     app = Flask(__name__)
     Compress(app)
     init_redis(app)
-    with app.app_context():
-        init_db()
+
     
 
     limiter.init_app(app)
