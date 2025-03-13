@@ -27,9 +27,16 @@ This authentication service implements a robust, scalable architecture using:
   - Nginx for request handling and static asset serving
   - Optimized Docker Compose configuration
 
+- **Application Layer**
+  - Flask-based modular Blueprint architecture
+  - Dependency injection for service composition
+  - Comprehensive error handling and logging
+  - Separate read/write database connections for optimal performance
+
 - **Frontend**
   - TailwindCSS for responsive dashboard UI
   - Minimal design focused on authentication flows
+  - Dynamic form validation
 
 ## Security Features
 
@@ -37,14 +44,22 @@ This authentication service implements a robust, scalable architecture using:
   - Optional MFA during registration
   - PyOTP integration for time-based one-time passwords
   - User-controlled MFA activation/deactivation
+  - QR code generation for authenticator app setup
 
 - **Rate Limiting**
   - Request throttling to prevent brute force attacks
   - IP-based and account-based rate limiting strategies
+  - Exponential backoff for repeated failed attempts
 
 - **Honeypot Protection**
   - Invisible form fields to catch automated submissions
   - Automated flagging of suspicious authentication attempts
+  - Silent failure mode to prevent attack enumeration
+
+- **Session Management**
+  - Redis-backed secure session storage
+  - Configurable session expiration
+  - Forced re-authentication for sensitive operations
 
 ## Development Practices
 
@@ -57,11 +72,19 @@ This authentication service implements a robust, scalable architecture using:
   - Multi-service Docker Compose setup
   - Optimized initialization sequence
   - Network isolation between service layers
+  - Health checks for service dependencies
+
+- **Code Quality**
+  - Ruff for linting and code formatting
+  - Type annotations throughout codebase
+  - Comprehensive docstrings
+  - Clean architecture with separation of concerns
 
 ## Observability
 - Native Flask logging before each request
 - Prometheus metrics exposed at `/metrics`
 - Grafana dashboard available at `localhost:3000`
+- Custom metrics for authentication events and rate limiting
 
 ## Getting Started
 
@@ -76,6 +99,29 @@ docker-compose up --build
 
 Visit `http://localhost:80` to access the authentication dashboard.
 Visit `http://localhost:3000` to access the Grafana dashboard.
+
+## Screenshots
+
+### Login Page with MFA Option
+![Login Screenshot](login-screenshot.png)
+
+### User Dashboard
+![Dashboard Screenshot](dashboard-screenshot.png)
+
+### MFA Setup Flow
+![MFA Setup](mfa-setup-screenshot.png)
+
+## Testing
+
+The service includes comprehensive testing with pytest:
+
+```bash
+# Run tests
+docker-compose run --rm app pytest
+
+# Run tests with coverage report
+docker-compose run --rm app pytest --cov=app --cov-report=html
+```
 
 ## License
 
