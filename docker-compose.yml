@@ -23,7 +23,7 @@ services:
       - haproxy
       - redis
     command: >
-      sh -c "pip install uv && uv pip install --system --requirements pyproject.toml && python -m core.init_db && gunicorn -w 4 -b 0.0.0.0:8080 app:app"
+      sh -c "apt-get update && apt-get install -y libpq-dev gcc python3-dev && pip install uv && uv pip install --system --requirements pyproject.toml && python -m core.init_db && gunicorn -w 4 -b 0.0.0.0:8080 app:app"
     networks:
       - frontend
       - backend
