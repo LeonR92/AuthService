@@ -2,6 +2,11 @@
 ![Ruff](https://img.shields.io/badge/code%20style-ruff-000000.svg)
 ![Python](https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white)
 ![Docker](https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-316192?style=for-the-badge&logo=postgresql&logoColor=white)
+![Redis](https://img.shields.io/badge/Redis-DD0031?style=for-the-badge&logo=redis&logoColor=white)
+![Grafana](https://img.shields.io/badge/Grafana-F46800?style=for-the-badge&logo=grafana&logoColor=white)
+![Prometheus](https://img.shields.io/badge/Prometheus-E6522C?style=for-the-badge&logo=prometheus&logoColor=white)
+
 
 
 # Scalable Authentication Service
@@ -63,24 +68,17 @@ This authentication service implements a robust, scalable architecture using:
 
 ```bash
 # Clone the repository
-git clone https://github.com/yourusername/auth-service.git
-cd auth-service
+git clone https://github.com/LeonR92/BookStore.git
+cd BookStore
 
 # Start the services
-docker-compose up
+docker-compose up --build
 ```
 
 Visit `http://localhost:80` to access the authentication dashboard.
+Visit `http://localhost:3000` to access the Grafana dashboard.
 
-## Testing
 
-```bash
-# Run the test suite
-pytest
-
-# Run with coverage
-pytest --cov=app tests/
-```
 
 ## License
 
