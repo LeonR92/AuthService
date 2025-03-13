@@ -38,7 +38,7 @@ app.config["SECRET_KEY"] = os.getenv("SECRET_KEY")
 
 
 
-limiter.limit("5 per minute")(app.view_functions["auth.authenticate_login"])
+limiter.limit("10 per minute")(app.view_functions["auth.authenticate_login"])
 
 
 @app.before_request
