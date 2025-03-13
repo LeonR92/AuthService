@@ -45,15 +45,12 @@ def mock_credentials_list():
 
 def test_get_credentials_by_id_existing(credentials_repository, mock_read_session, mock_credentials_list):
     """Test fetching credentials by ID when credentials exist."""
-    # Arrange
     mock_query = mock_read_session.query.return_value
     mock_filter = mock_query.filter.return_value
     mock_filter.first.return_value = mock_credentials_list[0]
     
-    # Act
     result = credentials_repository.get_credentials_by_id(1)
     
-    # Assert
     mock_read_session.query.assert_called_once_with(Credentials)
     mock_query.filter.assert_called_once()
     mock_filter.first.assert_called_once()
@@ -62,15 +59,12 @@ def test_get_credentials_by_id_existing(credentials_repository, mock_read_sessio
 
 def test_get_credentials_by_id_nonexistent(credentials_repository, mock_read_session):
     """Test fetching credentials by ID when credentials don't exist."""
-    # Arrange
     mock_query = mock_read_session.query.return_value
     mock_filter = mock_query.filter.return_value
     mock_filter.first.return_value = None
     
-    # Act
     result = credentials_repository.get_credentials_by_id(999)
     
-    # Assert
     mock_read_session.query.assert_called_once_with(Credentials)
     mock_query.filter.assert_called_once()
     mock_filter.first.assert_called_once()
@@ -79,15 +73,12 @@ def test_get_credentials_by_id_nonexistent(credentials_repository, mock_read_ses
 
 def test_get_credentials_by_email_existing(credentials_repository, mock_read_session, mock_credentials_list):
     """Test fetching credentials by email when credentials exist."""
-    # Arrange
     mock_query = mock_read_session.query.return_value
     mock_filter = mock_query.filter.return_value
     mock_filter.first.return_value = mock_credentials_list[0]
     
-    # Act
     result = credentials_repository.get_credentials_by_email("user1@example.com")
     
-    # Assert
     mock_read_session.query.assert_called_once_with(Credentials)
     mock_query.filter.assert_called_once()
     mock_filter.first.assert_called_once()
@@ -96,15 +87,12 @@ def test_get_credentials_by_email_existing(credentials_repository, mock_read_ses
 
 def test_get_credentials_by_email_nonexistent(credentials_repository, mock_read_session):
     """Test fetching credentials by email when credentials don't exist."""
-    # Arrange
     mock_query = mock_read_session.query.return_value
     mock_filter = mock_query.filter.return_value
     mock_filter.first.return_value = None
     
-    # Act
     result = credentials_repository.get_credentials_by_email("nonexistent@example.com")
     
-    # Assert
     mock_read_session.query.assert_called_once_with(Credentials)
     mock_query.filter.assert_called_once()
     mock_filter.first.assert_called_once()
@@ -113,16 +101,13 @@ def test_get_credentials_by_email_nonexistent(credentials_repository, mock_read_
 
 def test_get_email_by_userid_existing(credentials_repository, mock_read_session):
     """Test fetching email by user ID when user exists."""
-    # Arrange
     mock_query = mock_read_session.query.return_value
     mock_join = mock_query.join.return_value
     mock_filter = mock_join.filter.return_value
     mock_filter.first.return_value = ("user1@example.com",)
     
-    # Act
     result = credentials_repository.get_email_by_userid(1)
     
-    # Assert
     mock_read_session.query.assert_called_once()
     mock_query.join.assert_called_once()
     mock_join.filter.assert_called_once()
@@ -132,16 +117,13 @@ def test_get_email_by_userid_existing(credentials_repository, mock_read_session)
 
 def test_get_email_by_userid_nonexistent(credentials_repository, mock_read_session):
     """Test fetching email by user ID when user doesn't exist."""
-    # Arrange
     mock_query = mock_read_session.query.return_value
     mock_join = mock_query.join.return_value
     mock_filter = mock_join.filter.return_value
     mock_filter.first.return_value = None
     
-    # Act
     result = credentials_repository.get_email_by_userid(999)
     
-    # Assert
     mock_read_session.query.assert_called_once()
     mock_query.join.assert_called_once()
     mock_join.filter.assert_called_once()
@@ -176,13 +158,9 @@ def test_create_credentials(credentials_repository, mock_write_session):
 
 def test_delete_credentials_existing(credentials_repository, mock_write_session, mock_credentials_list):
     """Test deleting credentials when credentials exist."""
-    # Arrange
-    # Mock the get_credentials_by_id method to return an existing user
     with patch.object(credentials_repository, 'get_credentials_by_id', return_value=mock_credentials_list[0]):
-        # Act
         result = credentials_repository.delete_credentials(1)
         
-        # Assert
         credentials_repository.get_credentials_by_id.assert_called_once_with(1)
         mock_write_session.delete.assert_called_once_with(mock_credentials_list[0])
         assert result == mock_credentials_list[0]
@@ -190,13 +168,9 @@ def test_delete_credentials_existing(credentials_repository, mock_write_session,
 
 def test_delete_credentials_nonexistent(credentials_repository, mock_write_session):
     """Test deleting credentials when credentials don't exist."""
-    # Arrange
-    # Mock the get_credentials_by_id method to return None
     with patch.object(credentials_repository, 'get_credentials_by_id', return_value=None):
-        # Act
         result = credentials_repository.delete_credentials(999)
         
-        # Assert
         credentials_repository.get_credentials_by_id.assert_called_once_with(999)
         mock_write_session.delete.assert_not_called()
         assert result is None
@@ -204,16 +178,12 @@ def test_delete_credentials_nonexistent(credentials_repository, mock_write_sessi
 
 def test_soft_delete_credentials_existing(credentials_repository, mock_credentials_list):
     """Test soft deleting credentials when credentials exist."""
-    # Arrange
-    # Mock the get_credentials_by_id method to return an existing user
     mock_user = mock_credentials_list[0]
     mock_user.deleted_at = None
     
     with patch.object(credentials_repository, 'get_credentials_by_id', return_value=mock_user):
-        # Act
         result = credentials_repository.soft_delete_credentials(1)
         
-        # Assert
         credentials_repository.get_credentials_by_id.assert_called_once_with(1)
         assert result == mock_user
         assert result.deleted_at is not None
@@ -221,42 +191,32 @@ def test_soft_delete_credentials_existing(credentials_repository, mock_credentia
 
 def test_soft_delete_credentials_nonexistent(credentials_repository):
     """Test soft deleting credentials when credentials don't exist."""
-    # Arrange
-    # Mock the get_credentials_by_id method to return None
     with patch.object(credentials_repository, 'get_credentials_by_id', return_value=None):
-        # Act
         result = credentials_repository.soft_delete_credentials(999)
         
-        # Assert
         credentials_repository.get_credentials_by_id.assert_called_once_with(999)
         assert result is None
 
 
 def test_update_credentials_existing(credentials_repository, mock_read_session, mock_write_session, mock_credentials_list):
     """Test updating credentials when credentials exist."""
-    # Arrange
     mock_cred = mock_credentials_list[0]
     cred_id = 1
     new_email = "updated@example.com"
     
-    # Mock query chain for read session
     mock_read_query = mock_read_session.query.return_value
     mock_read_filter = mock_read_query.filter_by.return_value
     mock_read_filter.first.return_value = mock_cred
     
-    # Mock merge operation
     mock_write_session.merge.return_value = mock_cred
     
-    # Act
     result = credentials_repository.update_credentials(cred_id, email=new_email)
     
-    # Assert
     mock_read_session.query.assert_called_once_with(Credentials)
     mock_read_query.filter_by.assert_called_once_with(id=cred_id)
     mock_read_filter.first.assert_called_once()
     
     mock_write_session.merge.assert_called_once_with(mock_cred)
-    # Check that setattr was used to update the email
     assert mock_cred.email == new_email
     
     mock_write_session.commit.assert_called_once()
@@ -266,19 +226,15 @@ def test_update_credentials_existing(credentials_repository, mock_read_session, 
 
 def test_update_credentials_nonexistent(credentials_repository, mock_read_session, mock_write_session):
     """Test updating credentials when credentials don't exist."""
-    # Arrange
     cred_id = 999
     new_email = "updated@example.com"
     
-    # Mock query chain for read session to return None
     mock_read_query = mock_read_session.query.return_value
     mock_read_filter = mock_read_query.filter_by.return_value
     mock_read_filter.first.return_value = None
     
-    # Act
     result = credentials_repository.update_credentials(cred_id, email=new_email)
     
-    # Assert
     mock_read_session.query.assert_called_once_with(Credentials)
     mock_read_query.filter_by.assert_called_once_with(id=cred_id)
     mock_read_filter.first.assert_called_once()
@@ -291,30 +247,24 @@ def test_update_credentials_nonexistent(credentials_repository, mock_read_sessio
 
 def test_update_credentials_multiple_fields(credentials_repository, mock_read_session, mock_write_session, mock_credentials_list):
     """Test updating multiple fields of credentials."""
-    # Arrange
     mock_cred = mock_credentials_list[0]
     cred_id = 1
     new_email = "updated@example.com"
     new_password = "new_password"
     
-    # Mock query chain for read session
     mock_read_query = mock_read_session.query.return_value
     mock_read_filter = mock_read_query.filter_by.return_value
     mock_read_filter.first.return_value = mock_cred
     
-    # Mock merge operation
     mock_write_session.merge.return_value = mock_cred
     
-    # Act
     result = credentials_repository.update_credentials(cred_id, email=new_email, password=new_password)
     
-    # Assert
     mock_read_session.query.assert_called_once_with(Credentials)
     mock_read_query.filter_by.assert_called_once_with(id=cred_id)
     mock_read_filter.first.assert_called_once()
     
     mock_write_session.merge.assert_called_once_with(mock_cred)
-    # Check that setattr was used to update both fields
     assert mock_cred.email == new_email
     assert mock_cred.password == new_password
     
