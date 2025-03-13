@@ -102,15 +102,16 @@ Visit `http://localhost:3000` to access the Grafana dashboard.
 
 ## Screenshots
 
-### Login Page with MFA Option
+### Login Page
 ![Login Screenshot](login.jpeg)
+### Registration Page with MFA Option
 ![Registration Screenshot](registration.jpeg)
-
-### User Dashboard
-![Dashboard Screenshot](dashboard-screenshot.png)
-
+### OTP input
+![Registration Screenshot](otp_input.jpeg)
+### MFA Page (Dummy dashboard, only the highlighted functions work)
+![Dashboard Screenshot](dashboard.jpeg)
 ### MFA Setup Flow
-![MFA Setup](mfa-setup-screenshot.png)
+![MFA Setup](qrcode.jpeg)
 
 ## Testing
 
