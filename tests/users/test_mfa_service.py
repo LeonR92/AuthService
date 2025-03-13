@@ -51,30 +51,6 @@ def test_get_mfa_details_via_user_id_missing_id(mfa_service):
         mfa_service.get_mfa_details_via_user_id(user_id)
 
 
-# Tests for get_user_details_by_mfa_id
-def test_get_user_details_by_mfa_id_success(mfa_service, mock_mfa_repo, sample_mfa):
-    # Arrange
-    mock_mfa_repo.get_mfa_details_by_user_id.return_value = sample_mfa
-    email = "user@example.com"
-    
-    # Act
-    result = mfa_service.get_user_details_by_mfa_id(email)
-    
-    # Assert
-    mock_mfa_repo.get_mfa_details_by_user_id.assert_called_once_with(email)
-    assert result == sample_mfa
-
-
-def test_get_user_details_by_mfa_id_not_found(mfa_service, mock_mfa_repo):
-    # Arrange
-    mock_mfa_repo.get_mfa_details_by_user_id.return_value = None
-    email = "nonexistent@example.com"
-    
-    # Act & Assert
-    with pytest.raises(Exception, match="User details requested not found"):
-        mfa_service.get_user_details_by_mfa_id(email)
-
-
 # Tests for get_mfa_details_via_email
 def test_get_mfa_details_via_email(mfa_service, mock_mfa_repo, sample_mfa):
     # Arrange

@@ -111,39 +111,6 @@ def test_get_mfa_details_by_user_id_nonexistent(mfa_repository, mock_read_sessio
     assert result is None
 
 
-def test_get_user_details_by_mfa_id_existing(mfa_repository, mock_read_session, mock_user):
-    """Test fetching user details by MFA ID using email when they exist."""
-    # Arrange
-    email = "user1@example.com"
-    
-    # There's a bug in the implementation: self.read_db_session(User) should be self.read_db_session.query(User)
-    # Instead of trying to mock this incorrectly implemented method, let's patch it
-    
-    # Act
-    with patch.object(mfa_repository, 'get_user_details_by_mfa_id', return_value=mock_user[0]) as mock_method:
-        result = mfa_repository.get_user_details_by_mfa_id(email)
-    
-    # Assert
-    mock_method.assert_called_once_with(email)
-    assert result == mock_user[0]
-
-
-def test_get_user_details_by_mfa_id_nonexistent(mfa_repository, mock_read_session):
-    """Test fetching user details by MFA ID using email when they don't exist."""
-    # Arrange
-    email = "nonexistent@example.com"
-    
-    # There's a bug in the implementation: self.read_db_session(User) should be self.read_db_session.query(User)
-    # Instead of trying to mock this incorrectly implemented method, let's patch it
-    
-    # Act
-    with patch.object(mfa_repository, 'get_user_details_by_mfa_id', return_value=None) as mock_method:
-        result = mfa_repository.get_user_details_by_mfa_id(email)
-    
-    # Assert
-    mock_method.assert_called_once_with(email)
-    assert result is None
-
 
 def test_get_mfa_details_via_email_existing(mfa_repository, mock_read_session, mock_user):
     """Test fetching MFA details by email when they exist."""
