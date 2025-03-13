@@ -6,7 +6,7 @@ implementing read/write separation for security and performance.
 
 """
 
-from typing import List, Optional
+from typing import Optional
 from blueprints.users.models import Credentials, User
 from sqlalchemy.orm import Session
 

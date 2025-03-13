@@ -1,4 +1,4 @@
-from flask import Blueprint, abort, redirect, render_template, request, jsonify, session, url_for
+from flask import Blueprint, abort, redirect, render_template, request, session, url_for
 from core.di import create_credentials_service, create_mfa_service, create_user_service
 
 from core.database import get_read_db,get_write_db

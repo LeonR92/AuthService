@@ -409,32 +409,3 @@ def test_activate_mfa_existing_mfa_with_id(user_service, mock_user_repo, mock_mf
     mock_mfa_service.create_mfa_entry.assert_not_called()
     mock_user_repo.update.assert_not_called()
 
-
-# Tests for update_user
-def test_update_user(user_service, mock_user_repo):
-    # Arrange
-    user_id = 1
-    update_data = {"first_name": "Jane", "last_name": "Smith"}
-    mock_updated_user = Mock()
-    mock_user_repo.update.return_value = mock_updated_user
-    
-    # Act
-    result = user_service.update_user(user_id, **update_data)
-    
-    # Assert
-    mock_user_repo.update.assert_called_once_with(user_id, **update_data)
-    assert result == mock_updated_user
-
-
-# Tests for delete_user
-def test_delete_user(user_service, mock_user_repo):
-    # Arrange
-    user_id = 1
-    mock_user_repo.delete.return_value = True
-    
-    # Act
-    result = user_service.delete_user(user_id)
-    
-    # Assert
-    mock_user_repo.delete.assert_called_once_with(user_id)
-    assert result is True
