@@ -13,7 +13,7 @@ services:
       - READ_DATABASE_URL=postgresql://user:password@postgres-replica:5432/mydb
       - REDIS_URL=redis://redis:6379/0
       - SECRET_KEY=asd7612..asdkaksd@!^%asd
-    expose:
+    ports:
       - "8080"
     depends_on:
       - postgres-primary
