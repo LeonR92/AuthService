@@ -34,7 +34,7 @@ This authentication service implements a robust, scalable architecture using:
   - Separate read/write database connections for optimal performance
 
 - **Frontend**
-  - TailwindCSS for responsive dashboard UI
+  - TailwindCSS for responsive dummy dashboard UI
   - Minimal design focused on authentication flows
   - Dynamic form validation
 
