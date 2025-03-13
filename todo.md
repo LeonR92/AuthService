@@ -1,3 +1,3 @@
 SECRET MANAGEMENT in docker compose
 .ENV file
-type hinting and doc string
+type hinting and doc string for core
