@@ -61,14 +61,25 @@ def authenticate_login():
     with get_read_db() as read_db, get_write_db() as write_db:
         user_service = create_user_service(read_db=read_db,write_db=write_db)
         auth_service = create_auth_service(read_db=read_db, write_db=write_db)
-        # verify password against db
-        if not auth_service.verify_password(email, password):
-            return jsonify({"error": "Authentication failed. Please check creds"}), 401
         
-        # get MFA details to determine routing process
-        mfa_service = create_mfa_service(read_db=read_db,write_db=write_db)
-        mfa_enabled = mfa_service.get_mfa_details_via_email(email=email)
-        user_id = user_service.get_userid_by_email(email=email)
+        try:
+            # verify password against db
+            if not auth_service.verify_password(email, password):
+                return jsonify({"error": "Authentication failed. Please check creds"}), 401
+            
+            # get MFA details to determine routing process
+            mfa_service = create_mfa_service(read_db=read_db,write_db=write_db)
+            mfa_enabled = mfa_service.get_mfa_details_via_email(email=email)
+            user_id = user_service.get_userid_by_email(email=email)
+        except Exception as e:
+            # Handle the "credentials not found" exception
+            error_message = str(e)
+            if "credentials not found" in error_message:
+                return jsonify({"error": "User not found. Please check your email address."}), 404
+            else:
+                # Log the unexpected error but don't expose details to user
+                logging.error(f"Authentication error: {error_message}")
+                return jsonify({"error": "Authentication failed. Please try again later."}), 500
 
     # save login into session
     session["user_email"] = email
