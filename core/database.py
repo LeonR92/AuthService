@@ -9,7 +9,6 @@ from typing import Generator
 
 load_dotenv()
 
-
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
@@ -17,7 +16,7 @@ logger = logging.getLogger(__name__)
 WRITE_DATABASE_URL = os.getenv("WRITE_DATABASE_URL", "sqlite:///write.db")
 READ_DATABASE_URL = os.getenv("READ_DATABASE_URL", "sqlite:///read.db")
 
-# Connection arguments (Needed for SQLite)
+# Connection arguments (Fallback for SQLite)
 connect_args = {"check_same_thread": False} if WRITE_DATABASE_URL.startswith("sqlite") else {}
 
 # Create database engines
