@@ -8,7 +8,7 @@ for secure and efficient database operations on user authentication data.
 
 
 from datetime import datetime
-from typing import Any, List, Optional
+from typing import Any, Optional
 from sqlalchemy.orm import Session
 from blueprints.users.models import Credentials, User
 

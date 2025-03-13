@@ -8,7 +8,6 @@ implementing business logic and validation on top of the data access layer.
 
 import random
 import string
-from typing import List, Optional
 from blueprints.users.credentials_repository import CredentialsRepository
 import bcrypt
 from blueprints.users.models import Credentials
