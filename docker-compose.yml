@@ -10,7 +10,7 @@ services:
     environment:
       - PYTHONUNBUFFERED=1
       - WRITE_DATABASE_URL=postgresql://user:password@postgres-primary:5432/mydb
-      - READ_DATABASE_URL=postgresql://user:password@haproxy:5432/mydb
+      - READ_DATABASE_URL=postgresql://user:password@pgbouncer:6432/mydb
       - REDIS_URL=redis://redis:6379/0
       - SECRET_KEY=asd7612..asdkaksd@!^%asd
     expose:
@@ -20,6 +20,7 @@ services:
       - postgres-replica-1
       - postgres-replica-2
       - postgres-replica-3
+      - pgbouncer
       - haproxy
       - redis
     command: >
@@ -164,6 +165,20 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+    networks:
+      - backend
+
+  pgbouncer:
+    image: edoburu/pgbouncer:1.18.0
+    container_name: pgbouncer
+    restart: always
+    volumes:
+      - ./pgbouncer/pgbouncer.ini:/etc/pgbouncer/pgbouncer.ini:ro
+      - ./pgbouncer/userlist.txt:/etc/pgbouncer/userlist.txt:ro
+    expose:
+      - "6432"
+    depends_on:
+      - haproxy
     networks:
       - backend
 
