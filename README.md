@@ -113,17 +113,6 @@ Visit `http://localhost:3000` to access the Grafana dashboard.
 ### MFA Setup Flow
 ![MFA Setup](qrcode.jpeg)
 
-## Testing
-
-The service includes comprehensive testing with pytest:
-
-```bash
-# Run tests
-docker-compose run --rm app pytest
-
-# Run tests with coverage report
-docker-compose run --rm app pytest --cov=app --cov-report=html
-```
 
 ## License
 
