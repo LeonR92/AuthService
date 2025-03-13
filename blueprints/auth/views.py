@@ -13,12 +13,11 @@ Routes:
 
 
 from flask import Blueprint, jsonify, redirect, request, session, url_for
-from flask_limiter import Limiter
-from flask_limiter.util import get_remote_address
 from blueprints.users.mfa_repository import MFARepository
 from blueprints.users.mfa_service import MFAservice
 import logging
 import redis
+
 
 from core.database import get_read_db, get_write_db
 from core.di import create_auth_service, create_mfa_service, create_user_service
@@ -34,16 +33,10 @@ auth = Blueprint(
 # Redis client for session storage
 redis_client = redis.Redis(host='redis', port=6379, db=0)  
 
-# Rate limiter to prevent brute force attacks
-limiter = Limiter(
-    get_remote_address,
-    storage_uri="redis://redis:6379/0",  
-    strategy="fixed-window" 
-)
-limiter.init_app(auth)
+
+
 
 @auth.route("/authenticate", methods=["POST"])
-@limiter.limit("5 per minute") 
 def authenticate_login():
     """Authenticate user login credentials and handle MFA redirection if enabled.
     This endpoint processes the login form data, verifies credentials against
@@ -90,7 +83,6 @@ def authenticate_login():
 
 
 @auth.route("/verify_otp", methods=["POST"])
-@limiter.limit("10 per 5 minutes") 
 def verify_otp():
     """Verify the one-time password (OTP) code for MFA authentication.
     
