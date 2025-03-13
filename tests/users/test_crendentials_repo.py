@@ -40,20 +40,7 @@ def mock_credentials_list():
     ]
 
 
-def test_get_all_credentials(credentials_repository, mock_read_session, mock_credentials_list):
-    """Test fetching all credentials."""
-    # Arrange
-    mock_query = mock_read_session.query.return_value
-    mock_query.all.return_value = mock_credentials_list
-    
-    # Act
-    result = credentials_repository.get_all_credentials()
-    
-    # Assert
-    mock_read_session.query.assert_called_once_with(Credentials)
-    mock_query.all.assert_called_once()
-    assert result == mock_credentials_list
-    assert len(result) == 3
+
 
 
 def test_get_credentials_by_id_existing(credentials_repository, mock_read_session, mock_credentials_list):

@@ -279,17 +279,6 @@ def test_create_credentials_error(credentials_service, mock_cred_repo):
         mock_cred_repo.create_credentials.assert_called_once_with(email=email, password=hashed_password)
 
 
-def test_get_all_credentials(credentials_service, mock_cred_repo, mock_credentials):
-    """Test getting all credentials."""
-    # Arrange
-    mock_cred_repo.get_all_credentials.return_value = mock_credentials
-    
-    # Act
-    result = credentials_service.get_all_credentials()
-    
-    # Assert
-    mock_cred_repo.get_all_credentials.assert_called_once()
-    assert result == mock_credentials
 
 
 def test_create_user_valid(credentials_service, mock_cred_repo):

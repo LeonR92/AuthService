@@ -69,9 +69,6 @@ class CredentialsService:
             raise RuntimeError("Cant create credentials")
         return cred_id
 
-    def get_all_credentials(self) -> List[Credentials]:
-        """Fetch all credentials."""
-        return self.cred_repo.get_all_credentials()
 
     def create_user(self, data: dict):
         """Creates a new user with basic validation."""
